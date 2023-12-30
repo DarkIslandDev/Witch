@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Keys xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Key Name="hp_Key">
+		<Translate>
+			<en-us>Health</en-us>
+			<ru-ru>Здоровье</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="armor_Key">
+		<Translate>
+			<en-us>Armor</en-us>
+			<ru-ru>Защита</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="atk_Key">
+		<Translate>
+			<en-us>Attack</en-us>
+			<ru-ru>Сила</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="mvspd_Key">
+		<Translate>
+			<en-us>Move speed</en-us>
+			<ru-ru>Скорость движения</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="slcbtn_Key">
+		<Translate>
+			<en-us>Select</en-us>
+			<ru-ru>Выбрать</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="back_Key">
+		<Translate>
+			<en-us>Back</en-us>
+			<ru-ru>Назад</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="en_Key">
+		<Translate>
+			<en-us>English</en-us>
+			<ru-ru>English</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="ru_Key">
+		<Translate>
+			<en-us>Русский</en-us>
+			<ru-ru>Русский</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="start_Key">
+		<Translate>
+			<en-us>Start</en-us>
+			<ru-ru>Старт</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="exit_Key">
+		<Translate>
+			<en-us>Exit</en-us>
+			<ru-ru>Выход</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="settings_Key">
+		<Translate>
+			<en-us>Settings</en-us>
+			<ru-ru>Настройки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="changelanguage_Key">
+		<Translate>
+			<en-us>Change language</en-us>
+			<ru-ru>Сменить язык</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="win_Key">
+		<Translate>
+			<en-us>You Win!</en-us>
+			<ru-ru>Ты победил!</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="lose_Key">
+		<Translate>
+			<en-us>You Lose!</en-us>
+			<ru-ru>Ты проиграл!</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="retry_Key">
+		<Translate>
+			<en-us>Retry</en-us>
+			<ru-ru>Ещё раз!</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="pause_Key">
+		<Translate>
+			<en-us>Pause</en-us>
+			<ru-ru>Пауза</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="continue_Key">
+		<Translate>
+			<en-us>Continue</en-us>
+			<ru-ru>Продолжить</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="new_Key">
+		<Translate>
+			<en-us>New!</en-us>
+			<ru-ru>Новый!</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="skip_Key">
+		<Translate>
+			<en-us>Skip selection</en-us>
+			<ru-ru>Пропустисть выбор</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="sword_Key">
+		<Translate>
+			<en-us>Dull sword</en-us>
+			<ru-ru>Тупой меч</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="swordDesc_Key">
+		<Translate>
+			<en-us>Just junk sword</en-us>
+			<ru-ru>Просто мусорный меч</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="book_Key">
+		<Translate>
+			<en-us>Spell book</en-us>
+			<ru-ru>Книга заклинаний</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="bookDesc_Key">
+		<Translate>
+			<en-us>Old spell book</en-us>
+			<ru-ru>Старая книга заклинаний</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="aoe_Key">
+		<Translate>
+			<en-us>Strengthened scope of influence</en-us>
+			<ru-ru>Усиленная сфера влияния</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="aoeDesc_Key">
+		<Translate>
+			<en-us>Expanded scope of influence</en-us>
+			<ru-ru>Расширенная сфера влияния</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="armor_Key">
+		<Translate>
+			<en-us>Junk armor</en-us>
+			<ru-ru>мусорная броня</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="armorDesc_Key">
+		<Translate>
+			<en-us>Increase defense</en-us>
+			<ru-ru>Повышает защиту</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="cd_Key">
+		<Translate>
+			<en-us>Attack cooldown enhancement</en-us>
+			<ru-ru>Улучшение времени восстановления атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="cdDesc_Key">
+		<Translate>
+			<en-us>Reduce attack cooldown</en-us>
+			<ru-ru>Уменьшает время восстановление атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="damage_Key">
+		<Translate>
+			<en-us>Attack power enhancement</en-us>
+			<ru-ru>Увеличение силы атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="damageDesc_Key">
+		<Translate>
+			<en-us>Increase attack power</en-us>
+			<ru-ru>Повышает силу атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="knockback_Key">
+		<Translate>
+			<en-us>Knockback Strengthening</en-us>
+			<ru-ru>Усиление отбрасывания</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="knockbackDesc_Key">
+		<Translate>
+			<en-us>Increased knockback</en-us>
+			<ru-ru>Увеличенная отдача</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="holywater_Key">
+		<Translate>
+			<en-us>Holy water</en-us>
+			<ru-ru>Святая вода</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="holywaterDesc_Key">
+		<Translate>
+			<en-us>Holy water</en-us>
+			<ru-ru>Святая вода</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="atkpower_UpKey">
+		<Translate>
+			<en-us>Attack Power</en-us>
+			<ru-ru>Сила атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="atkspeed_UpKey">
+		<Translate>
+			<en-us>Attack speed</en-us>
+			<ru-ru>Скорость атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="weaponcooldown_UpKey">
+		<Translate>
+			<en-us>Weapon cooldown</en-us>
+			<ru-ru>Время восстановления оружия</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="recoverycooldown_UpKey">
+		<Translate>
+			<en-us>Recovery cooldown</en-us>
+			<ru-ru>Время восстановления регенерации</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="duration_UpKey">
+		<Translate>
+			<en-us>Duration</en-us>
+			<ru-ru>Длительность</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="aoe_UpKey">
+		<Translate>
+			<en-us>AOE</en-us>
+			<ru-ru>AOE</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="knockback_UpKey">
+		<Translate>
+			<en-us>Knockback</en-us>
+			<ru-ru>Отталкивание</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="projectilespeed_UpKey">
+		<Translate>
+			<en-us>Projectile speed</en-us>
+			<ru-ru>Скорость снаряда</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="recoverychance_UpKey">
+		<Translate>
+			<en-us>Recovery chance</en-us>
+			<ru-ru>Шанс регенирации</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="bleedingattackpower_UpKey">
+		<Translate>
+			<en-us>Bleeding attack power</en-us>
+			<ru-ru>Кровоточащая сила атаки</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="bleedingrate_UpKey">
+		<Translate>
+			<en-us>Bleeding rate</en-us>
+			<ru-ru>Скорость кровоточения</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="bleedingduration_UpKey">
+		<Translate>
+			<en-us>Bleeding duration</en-us>
+			<ru-ru>Продолжительность кровотечения</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="movementspeed_UpKey">
+		<Translate>
+			<en-us>Movement speed</en-us>
+			<ru-ru>Скорость движения</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="rotationspeed_UpKey">
+		<Translate>
+			<en-us>Rotation speed</en-us>
+			<ru-ru>Скорость вращения</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="projectilecount_UpKey">
+		<Translate>
+			<en-us>Projectile count</en-us>
+			<ru-ru>Количество снарядов</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="recovery_UpKey">
+		<Translate>
+			<en-us>Recovery</en-us>
+			<ru-ru>Регенерация</ru-ru>
+		</Translate>
+	</Key>
+	<Key Name="armor_UpKey">
+		<Translate>
+			<en-us>Armor</en-us>
+			<ru-ru>Защита</ru-ru>
+		</Translate>
+	</Key>
+</Keys>

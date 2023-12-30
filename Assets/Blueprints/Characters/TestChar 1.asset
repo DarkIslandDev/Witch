@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086754e98a044ebc86239c972020eb0a, type: 3}
+  m_Name: TestChar 1
+  m_EditorClassIdentifier: 
+  name: Leha
+  characterSprite: {fileID: 54143031572052567, guid: be21120a20bd3b84d80402b8ad3af641, type: 3}
+  owned: 0
+  cost: 999
+  hp: 90
+  atk: 30
+  recovery: 0
+  armor: 0
+  moveSpeed: 5
+  atkSpeed: 1
+  luck: 1
+  acceleration: 50
+  playerGFXPrefab: {fileID: 6006753742833428116, guid: 26380a9782df64c4c9620eb3618fe826, type: 3}
+  startingAbilities:
+  - {fileID: 8838068065842741410, guid: 38365dac0601099418dcae2de87ac463, type: 3}
