@@ -9,15 +9,11 @@ public class SwordAbility : MeleeAbility
     [Header("Sword stats")] 
     [SerializeField] protected GameObject swordPrefab;
     [SerializeField] protected LayerMask layerMask;
-    
     [SerializeField] protected UpgradeableProjectileCount projectileCount;
-    [SerializeField] protected new UpgradeableDamage damage;
-    [SerializeField] protected new UpgradeableKnockback knockback;
-    [SerializeField] protected UpgradeableRotationSpeed speed;
+    [SerializeField] protected UpgradeableAOE aoe;
 
     private List<Sword> swords;
-
-    [SerializeField] private int currentSword = 0;
+    private int currentSword = 0;
 
     protected override void Use()
     {
@@ -35,24 +31,19 @@ public class SwordAbility : MeleeAbility
     {
         base.Upgrade();
         RefreshSwords();
+
+        for (int i = 0; i < swords.Count; i++)
+        {
+            swords[i].weaponSize *= aoe.Value * 2;
+        }
     }
 
     protected override void Attack()
     {
-        for (int i = 0; i < swords.Count; )
-        {
-            currentSword = i;
-            Debug.Log(currentSword);
-            // StartCoroutine(swords[currentSword].Stab(timeSinceLastAttack));
-            // i++;
+        StartCoroutine(swords[currentSword].Stab(timeSinceLastAttack, damage, knockback));
 
-            if (timeSinceLastAttack >= cooldown.Value)
-            {
-                StartCoroutine(swords[currentSword].Stab(timeSinceLastAttack));
-                
-            }
-            i++;
-        }
+        if (currentSword < swords.Count) currentSword++;
+        if (currentSword == swords.Count) currentSword = 0;
     }
 
     private void RefreshSwords()
@@ -73,30 +64,31 @@ public class SwordAbility : MeleeAbility
         {
             float x = 0;
             float y = 0;
+            int rotX = 0;
             int rotY = 0;
-            
-            if (i % 2 != 0)
-            {
-                x = 0.5f;
-                y = 0.3f;
-                rotY = 0;
-            }
-            else
-            {
-                x = -0.5f;
-                y = 0.3f;
-                rotY = 180;
-            }
-            
-            sword.transform.position = new Vector3(x, y, 0);
-            sword.weaponSpriteRenderer.transform.localRotation = new Quaternion(0, 0, rotY, 0);
-        }
-    }
+            int rotZ = 0;
 
-    public void Damage(IDamageable damageable)
-    {
-        Vector2 knockbackDirection = (damageable.transform.position - player.transform.position).normalized;
-        damageable.TakeDamage(damage.Value, knockback.Value * knockbackDirection);
-        player.OnDealDamage?.Invoke(damage.Value);
+            if (i % 2 == 0)
+            {
+                x = -aoe.Value - 1f;
+                y = 0.3f;
+                rotX = 0;
+                rotY = 180;
+                rotZ = -45;
+                sword.isLeft = true;
+            }
+            else if (i % 2 != 0)
+            {
+                x = aoe.Value + 1f;
+                y = 0.3f;
+                rotX = 0;
+                rotY = 0;
+                rotZ = 0;
+                sword.isLeft = false;
+            }
+
+            sword.transform.localPosition = new Vector2(x, y);
+            sword.weaponSpriteRenderer.transform.localRotation = Quaternion.Euler(rotX, rotY, rotZ);
+        }
     }
 }

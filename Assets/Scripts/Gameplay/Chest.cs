@@ -102,8 +102,8 @@ public class Chest : MonoBehaviour
         GetComponent<Collider2D>().enabled = true;
     }
 
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.collider.gameObject == player.gameObject) OpenChest();
+        if(col.gameObject == player.gameObject) OpenChest();
     }
 }

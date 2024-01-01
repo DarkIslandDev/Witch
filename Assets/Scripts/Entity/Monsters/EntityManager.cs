@@ -112,8 +112,7 @@ public class EntityManager : MonoBehaviour
     {
         if (flashCoroutine != null) StopCoroutine(flashCoroutine);
         // flashCoroutine = StartCoroutine(Flash());
-        foreach (Monster monster in livingMonsters.ToList()
-                     .Where(monster => TransformOnScreen(monster.transform, Vector2.one)))
+        foreach (Monster monster in livingMonsters.ToList())
         {
             monster.TakeDamage(damage, Vector2.zero);
         }

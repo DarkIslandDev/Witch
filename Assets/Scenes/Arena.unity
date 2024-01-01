@@ -6517,7 +6517,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -14080,6 +14080,7 @@ MonoBehaviour:
   deathMaterial: {fileID: 2100000, guid: a33c9587356b9dd429291793734de6ca, type: 2}
   spriteRenderer: {fileID: 0}
   playerBlueprint: {fileID: 11400000, guid: 3cd0aee2b0e976f4e9e92e237585dfa0, type: 2}
+  expirienceToNextLevel: 5
 --- !u!4 &5536645269979281400
 Transform:
   m_ObjectHideFlags: 0

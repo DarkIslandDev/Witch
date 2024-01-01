@@ -156,7 +156,7 @@ MonoBehaviour:
   abilityName: sword_Key
   abilityDescription: swordDesc_Key
   rarity: 50
-  abilitySlotHUDUI: {fileID: 0}
+  abilitySlotHUD: {fileID: 0}
   abilitySlotPauseMenuUI: {fileID: 0}
   IsWeapon: 1
   targetLayer:
@@ -184,4 +184,4 @@ MonoBehaviour:
   weaponSpriteRenderer: {fileID: 6068978171504348256}
   stabOffset: 0.25
   stabDistance: 0.25
-  stabTime: 0.2
+  stabTime: 0.25

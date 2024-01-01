@@ -6,7 +6,6 @@ public class Sword : MonoBehaviour
     public SpriteRenderer weaponSpriteRenderer;
     
     [SerializeField] private Animator swordAnimator;
-    [SerializeField] private float rotationSpeed = 1;
     [SerializeField] protected float stabOffset;
     [SerializeField] protected float stabDistance;
     [SerializeField] protected float stabTime;
@@ -14,8 +13,10 @@ public class Sword : MonoBehaviour
     protected Player player;
     private SwordAbility swordAbility;
     private LayerMask layerMask;
-    protected Vector2 weaponSize;
+    public Vector2 weaponSize;
     protected FastList<GameObject> hitMonsters;
+
+    [HideInInspector] public bool isLeft;
 
     public void Init(SwordAbility swordAbility, LayerMask layerMask, Player player)
     {
@@ -23,19 +24,21 @@ public class Sword : MonoBehaviour
         this.layerMask = layerMask;
         this.player = player;
         weaponSize = weaponSpriteRenderer.bounds.size;
-        weaponSpriteRenderer.enabled = true;
+        weaponSpriteRenderer.enabled = false;
     }
 
-    public virtual IEnumerator Stab(float timeSinceLastAttack)
+    public virtual IEnumerator Stab(float timeSinceLastAttack, UpgradeableDamage damage, UpgradeableKnockback knockback)
     {
         hitMonsters = new FastList<GameObject>();
         timeSinceLastAttack -= stabTime;
         float t = 0;
+        weaponSpriteRenderer.transform.localScale = weaponSize;
         weaponSpriteRenderer.enabled = true;
-        Vector2 dir = player.IsLeft ? Vector2.left : Vector2.right;
+        Vector2 dir = isLeft ? Vector2.left : Vector2.right;
 
         while (t < stabTime)
         {
+            
             Vector2 attackBoxPosition = (Vector2)player.transform.position +
                                         dir * (weaponSize.x / 2 + stabOffset +
                                                stabDistance / stabTime * t);
@@ -52,35 +55,26 @@ public class Sword : MonoBehaviour
             
             swordAnimator.SetFloat("Speed", t * 15);
 
-            // foreach (Collider2D collider in hitColliders)
-            // {
-            //     if (!hitMonsters.Contains(collider.gameObject))
-            //     {
-            //         hitMonsters.Add(collider.gameObject);
-            //         Monster monster = collider.gameObject.GetComponentInParent<Monster>();
-            //         DamageMonster(monster, damage.Value, dir * knockback.Value);
-            //         player.OnDealDamage.Invoke(damage.Value);
-            //     }
-            // }
+            foreach (Collider2D collider in hitColliders)
+            {
+                if (!hitMonsters.Contains(collider.gameObject))
+                {
+                    hitMonsters.Add(collider.gameObject);
+                    Monster monster = collider.gameObject.GetComponentInParent<Monster>();
+                    DamageMonster(monster, damage.Value, dir * knockback.Value);
+                    player.OnDealDamage.Invoke(damage.Value);
+                }
+            }
             
             t += Time.deltaTime;
             yield return null;
         }
         
-        // Vector2 initialScale = transform.localScale;
-        //
-        // transform.localScale = initialScale;
-        weaponSpriteRenderer.enabled = false;
         
         swordAnimator.SetFloat("Speed", 0);
-        StopCoroutine(Stab(timeSinceLastAttack));
+        weaponSpriteRenderer.enabled = false;
+        StopCoroutine(Stab(timeSinceLastAttack, damage, knockback));
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if ((layerMask & (1 << other.gameObject.layer)) != 0)
-        {
-            swordAbility.Damage(other.gameObject.GetComponentInParent<Monster>());
-        }
-    }
+    
+    protected virtual void DamageMonster(Monster monster, float damage, Vector2 knockback) => monster.TakeDamage(damage, knockback);
 }

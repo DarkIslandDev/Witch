@@ -50,4 +50,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+JunkSurvivor.sln.DotSettings
+
 # End of https://www.gitignore.io/api/unity

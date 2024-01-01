@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5551160465866389456}
   - component: {fileID: 6360366912410835255}
   m_Layer: 0
-  m_Name: Stab
+  m_Name: SwordAbility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,6 +79,11 @@ MonoBehaviour:
     value: 1
     upgrades: 01000000
     projectilesPer: 1
+  aoe:
+    value: 0.5
+    upgrades:
+    - 0.2
+    - 0.2
   damage:
     value: 30
     upgrades:
@@ -90,8 +95,3 @@ MonoBehaviour:
     upgrades:
     - 1
     - 1
-  speed:
-    value: 1
-    upgrades:
-    - 0
-    - 0

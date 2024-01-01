@@ -12,6 +12,9 @@ public class PlayerAnimator : MonoBehaviour
         float h = movementInput.x;
         float v = movementInput.y;
 
+        if (h == 0) h = 0;
+        if (v == 0) v = 0;
+
         switch (h)
         {
             case <= -0.1f:
