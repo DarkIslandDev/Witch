@@ -7,7 +7,7 @@ public class Shield : Collectable
     
     protected override void OnCollected()
     {
-        player.StartCoroutine(player.GodMode(timeAmount));
+        player.TakeGodMode(timeAmount);
         Destroy(gameObject);
     }
 

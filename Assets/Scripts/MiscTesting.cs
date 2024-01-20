@@ -15,5 +15,14 @@ public class MiscTesting : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.E)) player.GainExp(1000);
         
         if(Input.GetKeyDown(KeyCode.V)) player.GainExp(player.expirienceToNextLevel);
+        
+        if(Input.GetKeyDown(KeyCode.X)) player.TakeDamage(player.CurrentHealth);
+
+        EnableGodMode();
+    }
+
+    private void EnableGodMode()
+    {
+        player.TakeGodMode(Input.GetKey(KeyCode.Z));
     }
 }

@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class Book : MonoBehaviour
 {
-    [SerializeField] private float rotationSpeed = 1;
-    
+    public SpriteRenderer spriteRenderer;
+    // [SerializeField] private float rotationSpeed = 1;
+
     private BookAbility bookAbility;
     private LayerMask layerMask;
+
 
     public void Init(BookAbility bookAbility, LayerMask layerMask)
     {

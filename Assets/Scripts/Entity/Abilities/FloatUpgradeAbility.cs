@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class FloatUpgradeAbility<T> : Ability where T : UpgradeableFloat
 {
-    [SerializeField] protected float[] upgrades;
+    [SerializeField] protected List<float> upgrades;
     
-    public override string Description => GetUpgradeDescriptions();
+    public override string Description => GetUpgradeDescription();
 
     protected override void Use()
     {
@@ -13,9 +14,9 @@ public class FloatUpgradeAbility<T> : Ability where T : UpgradeableFloat
         abilityManager.UpgradeValue<T, float>(upgrades[level]);
     }
 
-    protected override void Upgrade() => abilityManager.UpgradeValue<T, float>(upgrades[level]);
+    protected override void Upgrade() => abilityManager.UpgradeValue<T, float>(upgrades[level - 1]);
 
-    public override bool RequirementsMet() => level < upgrades.Length;
+    public override bool RequirementsMet() => level < upgrades.Count;
 
-    protected new string GetUpgradeDescriptions() => DescriptionUtils.GetUpgradeDescription(this.abilityDescription, upgrades[level]);
+    protected new string GetUpgradeDescription() => DescriptionUtils.GetUpgradeDescription(this.abilityDescription, upgrades[level]);
 }

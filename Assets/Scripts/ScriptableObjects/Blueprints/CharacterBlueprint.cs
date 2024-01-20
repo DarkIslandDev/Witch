@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Blueprints/Character", fileName = "CharacterBlueprint", order = 0)]
 public class CharacterBlueprint : ScriptableObject
@@ -16,7 +17,7 @@ public class CharacterBlueprint : ScriptableObject
     public float luck;
     public float acceleration;
     public GameObject playerGFXPrefab;
-    public GameObject[] startingAbilities;
+    public List<GameObject> startingAbilities;
     
     public float LevelToExpIncrease(int level)
     {

@@ -1,50 +1,89 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] private LevelManager levelManager;
+    
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseMenu;
-    private bool paused = false;
-    private bool timeIsFrozen = false;
-    
-    public bool TimeIsFrozen { set => timeIsFrozen = value; }
 
-    // public void PlayPause()
-    // {
-    //     if (paused != paused)
-    //     {
-    //         if (timeIsFrozen) Time.timeScale = 0;
-    //
-    //         pauseButton.SetActive(false);
-    //         pauseMenu.SetActive(true);
-    //     }
-    //     else
-    //     {
-    //         if (!timeIsFrozen) Time.timeScale = 1;
-    //
-    //         pauseButton.SetActive(true);
-    //         pauseMenu.SetActive(false);
-    //     }
-    // }
+    [SerializeField] private LocalizedText pauseText;
+    [SerializeField] private LocalizedText settingsText;
+    [SerializeField] private LocalizedText continueText;
+    [SerializeField] private LocalizedText restartText;
+    [SerializeField] private LocalizedText exitText;
+
+    public bool paused = false;
+    private bool timeIsFrozen = false;
+
+    private void Start()
+    {
+        OnLanguageChange();
+        LocalizationManager.OnLanguageChange += OnLanguageChange;
+    }
+
+    private void OnDestroy() => LocalizationManager.OnLanguageChange -= OnLanguageChange;
+
+    public bool TimeIsFrozen
+    {
+        set => timeIsFrozen = value;
+    }
 
     public void ClosePause()
     {
-        paused = false;
-        timeIsFrozen = false;
-        Time.timeScale = 1;
-        
+        levelManager.gameState = GameState.Game;
+        levelManager.SwitchGameState();
+
         pauseButton.SetActive(true);
         pauseMenu.SetActive(false);
     }
 
     public void PlayPause()
     {
-        paused = true;
-        timeIsFrozen = true;
-        Time.timeScale = 0;
+        levelManager.gameState = GameState.Pause;
+        levelManager.SwitchGameState();
         
         pauseButton.SetActive(false);
         pauseMenu.SetActive(true);
+    }
+
+    public void Pause(bool enable, int time)
+    {
+        paused = enable;
+        timeIsFrozen = enable;
+        Time.timeScale = time;
+    }
+
+    public void TakePause(bool enable)
+    {
+        if (enable)
+        {
+            switch (levelManager.gameState)
+            {
+                case GameState.Pause:
+                    ClosePause();
+                    break;
+                case GameState.Game:
+                    PlayPause();
+                    break;
+                case GameState.LevelUp:
+                    break;
+                case GameState.GameOver:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+    private void OnLanguageChange()
+    {
+        pauseText.Localize("pause_key");
+        settingsText.Localize("settings_key");
+        continueText.Localize("continue_key");
+        restartText.Localize("retry_key");
+        exitText.Localize("exit_key");
     }
 }

@@ -20,11 +20,12 @@ public class DamageText : MonoBehaviour
         transform.position = position;
         text.text = damage.ToString("N0");
         text.color = isPlayer ? new Color(161, 40, 40, 255) : Color.white;
+        
         StopAllCoroutines();
         StartCoroutine(AnimateText());
     }
 
-    IEnumerator AnimateText()
+    private IEnumerator AnimateText()
     {
         float t = 0;
         while (t < 1)

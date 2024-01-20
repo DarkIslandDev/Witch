@@ -1,4 +1,4 @@
-﻿using TMPro;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,12 +21,12 @@ public class CharacterCard : MonoBehaviour
         this.coinDisplay = coinDisplay;
 
         characterImage.sprite = characterBlueprint.characterSprite;
-        abilityImage.sprite = characterBlueprint.startingAbilities[0].GetComponentInChildren<SpriteRenderer>().sprite;
+        // abilityImage.sprite = characterBlueprint.startingAbilities.First().GetComponentInChildren<SpriteRenderer>().sprite;
         nameText.Localize("", characterBlueprint.name);
 
         if (characterBlueprint.owned)
         {
-            buttonText.Localize("slcbtn_Key");
+            buttonText.Localize("select_button_key");
         }
         else
         {

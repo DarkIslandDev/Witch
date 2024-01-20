@@ -17,8 +17,8 @@ public class InventorySlot : MonoBehaviour
     private List<Collectable> items;
     private FastList<Collectable> itemsBeingAdded;
     
-    private Color White = Color.white;
-    private Color Cody = new Color(1, 1, 1, 0.5f);
+    private readonly Color White = Color.white;
+    private readonly Color Cody = new Color(1, 1, 1, 0.5f);
 
     private void Update()
     {
@@ -53,26 +53,16 @@ public class InventorySlot : MonoBehaviour
 
     public void UseItem()
     {
-        if (items.Count > 0)
-        {
-            if (timer <= 0)
-            {
-                items[0].Use();
-                items.RemoveAt(0);
-                Cooldown();
-                timer = itemUseCooldownTimer;
-            
-                if (items.Count == 0)
-                {
-                    countText.text = string.Empty;
-                    itemImage.color = Cody;
-                }
-            }
+        if (items.Count <= 0) return;
+        if (!(timer <= 0)) return;
+        items[0].Use();
+        items.RemoveAt(0);
+        Cooldown();
+        timer = itemUseCooldownTimer;
 
-            Debug.Log($"До отката: {timer}");
-        }
-
-        Debug.Log("Вещички нет:%(");
+        if (items.Count != 0) return;
+        countText.text = string.Empty;
+        itemImage.color = Cody;
     }
 
     public bool IsFull() => items.Count + itemsBeingAdded.Count >= CollectableType.inventoryStackSize;

@@ -8,7 +8,7 @@ public class SpeedPotion : Collectable
     
     protected override void OnCollected()
     {
-        player.TakeSpeedGain(timeAmount, speedAmount);
+        player.UpdateMoveSpeed();
         Destroy(gameObject);
     }
 }

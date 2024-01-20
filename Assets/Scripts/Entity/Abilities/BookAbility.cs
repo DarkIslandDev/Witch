@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BookAbility : Ability
 {
-    [Header("Book stats")] 
-    [SerializeField] protected GameObject bookPrefab;
+    [Header("Book stats")] [SerializeField]
+    protected GameObject bookPrefab;
+
     [SerializeField] protected LayerMask layerMask;
     [SerializeField] protected UpgradeableProjectileCount projectileCount;
-    // [SerializeField] protected UpgradeableAOE radius;
+    [SerializeField] protected UpgradeableAOE radius;
     [SerializeField] protected UpgradeableDamage damage;
     [SerializeField] protected UpgradeableKnockback knockback;
     [SerializeField] protected UpgradeableRotationSpeed speed;
+    [SerializeField] protected UpgradeableWeaponCooldown cooldown;
+    [SerializeField] protected UpgradeableDuration duration;
 
     private List<Book> books;
+    protected float timeSinceLastAttack = 0;
 
     protected override void Use()
     {
@@ -21,6 +26,7 @@ public class BookAbility : Ability
         gameObject.SetActive(true);
         projectileCount.OnChanged?.AddListener(RefreshBooks);
         books = new List<Book>();
+        timeSinceLastAttack = cooldown.Value;
 
         for (int i = 0; i < projectileCount.Value; i++)
         {
@@ -32,9 +38,15 @@ public class BookAbility : Ability
     {
         base.Upgrade();
         RefreshBooks();
+        timeSinceLastAttack = cooldown.Value;
     }
 
     private void Update()
+    {
+        RotateBooks();
+    }
+
+    private void RotateBooks()
     {
         if (books.Count != 0)
         {
@@ -42,9 +54,17 @@ public class BookAbility : Ability
             {
                 float theta = (2 * Mathf.PI * i) / books.Count;
                 books[i].transform.localPosition = new Vector3(Mathf.Sin(theta + Time.time * speed.Value),
-                    Mathf.Cos(theta + Time.time * speed.Value), 
-                    0);
+                                                               Mathf.Cos(theta + Time.time * speed.Value),
+                                                               0);
             }
+        }
+    }
+
+    private void HideOrShowBooks(bool enable)
+    {
+        foreach (Book book in books)
+        {
+            book.gameObject.SetActive(enable);
         }
     }
 

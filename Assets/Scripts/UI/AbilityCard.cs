@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,19 +20,30 @@ public class AbilityCard : MonoBehaviour
         this.ability = ability;
         
         abilityImage.sprite = ability.AbilityImage;
+        LocalizeText();
+        LocalizationManager.OnLanguageChange += OnLanguageChange;
+        
+        StartCoroutine(Appear(waitToAppear));
+    }
+
+    private void OnLanguageChange()
+    {
+        LocalizeText();
+    }
+
+    private void LocalizeText()
+    {
         nameText.Localize(ability.AbilityName);
         descriptionText.Localize(ability.Description);
         
         if (!ability.Owned)
         {
-            levelText.Localize("new_Key");
+            levelText.Localize("new_key");
         }
         else
         {
             levelText.Localize("", $"{ability.Level} -> {(ability.Level + 1)}");
         }
-        
-        StartCoroutine(Appear(waitToAppear));
     }
 
     private IEnumerator Appear(float waitToAppear)

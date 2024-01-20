@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,7 +11,7 @@ public class Player : IDamageable
     public PlayerInventory playerInventory;
     public PlayerAnimator playerAnimator;
     public PlayerUI playerUI;
-    
+
     protected AbilityManager abilityManager;
     protected EntityManager entityManager;
     protected StatisticManager statisticManager;
@@ -19,6 +20,8 @@ public class Player : IDamageable
     protected Collider2D playerHitBox;
     [SerializeField] protected Transform centerTransform;
     [SerializeField] protected Collider2D collectableCollider;
+    [SerializeField] protected Collider2D boomerangCollider;
+    [SerializeField] protected CircleCollider2D saltCircleCollider;
     [SerializeField] protected Collider2D meleeHitBoxCollider;
     [SerializeField] protected ParticleSystem dustParticles;
     [SerializeField] protected ParticleSystem deathParticles;
@@ -27,8 +30,9 @@ public class Player : IDamageable
     [SerializeField] protected Material hitMaterial;
     [SerializeField] protected Material deathMaterial;
     public SpriteRenderer spriteRenderer;
-    
+
     [SerializeField] protected CharacterBlueprint playerBlueprint;
+    protected UpgradeableHealth health;
     protected UpgradeableMovementSpeed movementSpeed;
     protected UpgradeableArmor armor;
 
@@ -43,12 +47,14 @@ public class Player : IDamageable
     protected Vector2 lookDirection => inputManager.movementInput;
     protected CoroutineQueue coroutineQueue;
     protected Coroutine hitAnimationCoroutine = null;
-    
+
     public UnityEvent<float> OnDealDamage { get; } = new UnityEvent<float>();
     public UnityEvent OnDeath { get; } = new UnityEvent();
 
     public Transform CenterTransform => centerTransform;
     public Collider2D CollectableCollider => collectableCollider;
+    public Collider2D BoomerangCollider => boomerangCollider;
+    public CircleCollider2D SaltCircleCollider => saltCircleCollider;
     public CharacterBlueprint PlayerBlueprint => playerBlueprint;
     public int CurrentLevel => currentLevel;
     public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
@@ -59,37 +65,37 @@ public class Player : IDamageable
 
     private void Update()
     {
-        float deltaTime = Time.deltaTime;
-        
-        inputManager.HandleMovement(playerBlueprint.moveSpeed);
-        inputManager.HandleQuickSlots();
-        inputManager.PauseGame();
+        if (alive)
+        {
+            inputManager.HandleMovement(movementSpeed.Value);
+            inputManager.PauseGame();
+            inputManager.HandleQuickSlots();
+        }
     }
 
     private void FixedUpdate()
     {
-        float fixedDeltaTime = Time.fixedDeltaTime;
-        
-        inputManager.HandleCamera();
+        if (alive) inputManager.HandleCamera();
     }
 
     private void LateUpdate()
     {
-        float deltaTime = Time.deltaTime;
-
         inputManager.xInput = false;
         inputManager.bInput = false;
-        inputManager.aInput = false; 
+        inputManager.aInput = false;
         inputManager.yInput = false;
+        
         inputManager.startInput = false;
     }
 
-    public virtual void Init(EntityManager entityManager, AbilityManager abilityManager, StatisticManager statisticManager)
+    public void Init(EntityManager entityManager, AbilityManager abilityManager, StatisticManager statisticManager)
     {
+        alive = true;
+        
         this.entityManager = entityManager;
         this.abilityManager = abilityManager;
         this.statisticManager = statisticManager;
-        
+
         inputManager = GetComponent<InputManager>();
         playerMovement = GetComponent<PlayerMovement>();
         playerCamera = GetComponent<PlayerCamera>();
@@ -97,12 +103,13 @@ public class Player : IDamageable
         playerUI = GetComponent<PlayerUI>();
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         playerHitBox = spriteRenderer.gameObject.AddComponent<BoxCollider2D>();
-
+        playerHitBox.isTrigger = true;
+        
         playerInventory.Init();
 
         inputManager.player = this;
         zPositioner = gameObject.AddComponent<ZPositioner>();
-        
+
         OnDealDamage?.AddListener(statisticManager.IncreaseDamageDealt);
 
         coroutineQueue = new CoroutineQueue(this);
@@ -111,29 +118,31 @@ public class Player : IDamageable
         currentHealth = playerBlueprint.hp;
         maxHealth = playerBlueprint.hp;
         playerUI.healthBar.Setup(currentHealth, 0, maxHealth, true);
-        playerUI.levelBar.Setup(currentExpirience, 0, nextLevelExpirience, true);
+        
         currentLevel = 1;
-
+        playerUI.levelBar.Setup(currentExpirience, 0, nextLevelExpirience, true);
         UpdateLevelDisplay();
 
         movementSpeed = new UpgradeableMovementSpeed
         {
             Value = playerBlueprint.moveSpeed
         };
+
         abilityManager.RegisterUpgradeableValue(movementSpeed, true);
         UpdateMoveSpeed();
         armor = new UpgradeableArmor
         {
             Value = playerBlueprint.armor
         };
+
         abilityManager.RegisterUpgradeableValue(armor, true);
-        
+
         zPositioner.Init(transform);
     }
 
     public void GainExp(float exp)
     {
-        if(alive) coroutineQueue.EnqueueCoroutine(GainExpCoroutine(exp));
+        if (alive) coroutineQueue.EnqueueCoroutine(GainExpCoroutine(exp));
     }
 
     private IEnumerator GainExpCoroutine(float exp)
@@ -177,14 +186,17 @@ public class Player : IDamageable
     }
 
     private void UpdateLevelDisplay() => playerUI.levelText.text = $"{currentLevel}lv.";
-    
-    public override void KnockBack(Vector2 knockBack) => playerMovement.rigidbody.velocity += knockBack * Mathf.Sqrt(playerMovement.rigidbody.drag);
+
+    public override void KnockBack(Vector2 knockBack)
+    {
+        if (alive) playerMovement.rigidbody.velocity += knockBack * Mathf.Sqrt(playerMovement.rigidbody.drag);
+    }
 
     public override void TakeDamage(float damage, Vector2 knockBack = default(Vector2))
     {
-        if (alive)
+        if (!godMode)
         {
-            if (!godMode)
+            if (alive)
             {
                 if (armor.Value >= damage)
                 {
@@ -194,14 +206,14 @@ public class Player : IDamageable
                 {
                     damage -= armor.Value;
                 }
-            
+
                 currentHealth -= damage;
                 playerUI.healthBar.SubstractPoints(damage);
                 entityManager.SpawnDamageText(playerHitBox.bounds.max, damage, true);
 
                 playerMovement.rigidbody.velocity += knockBack * Mathf.Sqrt(playerMovement.rigidbody.drag);
                 statisticManager.IncreaseDamageTaken(damage);
-            
+
                 if (currentHealth <= 0)
                 {
                     currentHealth = 0;
@@ -209,7 +221,7 @@ public class Player : IDamageable
                 }
                 else
                 {
-                    if(hitAnimationCoroutine != null) StopCoroutine(hitAnimationCoroutine);
+                    if (hitAnimationCoroutine != null) StopCoroutine(hitAnimationCoroutine);
                     hitAnimationCoroutine = StartCoroutine(HitAnimation());
                 }
             }
@@ -219,7 +231,9 @@ public class Player : IDamageable
     private IEnumerator HitAnimation()
     {
         spriteRenderer.sharedMaterial = hitMaterial;
+
         yield return new WaitForSeconds(0.15f);
+
         spriteRenderer.sharedMaterial = defaultMaterial;
     }
 
@@ -227,7 +241,7 @@ public class Player : IDamageable
     {
         alive = false;
         spriteRenderer.sharedMaterial = defaultMaterial;
-        
+
         abilityManager.DestroyActiveAbilities();
         deathParticles.Play();
         float height = spriteRenderer.bounds.size.y;
@@ -236,18 +250,19 @@ public class Player : IDamageable
         while (t < 1)
         {
             spriteRenderer.sharedMaterial = deathMaterial;
-            deathParticles.transform.position = transform.position + Vector3.up * height * (1 - t);
-            deathMaterial.SetFloat("_CutoffHeight", t);
+            deathParticles.transform.position = transform.position + Vector3.up * (height * (1 - t));
+            deathMaterial.SetFloat("_DissolveAmount", t);
             t += Time.deltaTime;
             yield return null;
         }
 
-        deathMaterial.SetFloat("_Cutoff_height", 1.0f);
-        
+        deathMaterial.SetFloat("_DissolveAmount", 1.0f);
+
         yield return new WaitForSeconds(0.5f);
-        
+
         OnDeath?.Invoke();
         spriteRenderer.enabled = false;
+        deathParticles.Stop();
     }
 
     public void GainHealth(float health)
@@ -258,14 +273,27 @@ public class Player : IDamageable
         if (currentHealth >= maxHealth) currentHealth = maxHealth;
     }
 
-    public void UpdateMoveSpeed() => playerMovement.rigidbody.drag = playerBlueprint.acceleration / (movementSpeed.Value * movementSpeed.Value);
+    public void UpdateMoveSpeed() => playerMovement.rigidbody.drag =
+        playerBlueprint.acceleration / (movementSpeed.Value * movementSpeed.Value);
 
     public void TakeGodMode(float amount)
     {
         StopCoroutine(GodMode(amount));
         StartCoroutine(GodMode(amount));
     }
-    
+
+    public void TakeGodMode(bool enebale)
+    {
+        if (enebale)
+        {
+            StartCoroutine(GodMode(float.PositiveInfinity));
+        }
+        else
+        {
+            StopCoroutine(GodMode(0));
+        }
+    }
+
     public IEnumerator GodMode(float amount)
     {
         godMode = true;
@@ -275,34 +303,5 @@ public class Player : IDamageable
 
         shieldParticles.Stop();
         godMode = false;
-    }
-
-    public void TakeSpeedGain(float time, float amount)
-    {
-        StopCoroutine(SpeedGain(time, amount));
-        StartCoroutine(SpeedGain(time, amount));
-    }
-
-    private IEnumerator SpeedGain(float time, float amount)
-    {
-        ChangeSpeed(amount, true);
-        
-        yield return new WaitForSeconds(time);
-        
-        ChangeSpeed(amount, false);
-    }
-
-    public void ChangeSpeed(float amount, bool gainSpeed)
-    {
-        if (gainSpeed)
-        {
-            movementSpeed.Value += amount;
-        }
-        else
-        {
-            movementSpeed.Value -= amount;
-        }
-
-        UpdateMoveSpeed();
     }
 }

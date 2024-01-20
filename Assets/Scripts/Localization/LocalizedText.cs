@@ -1,4 +1,3 @@
-﻿using System;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
@@ -8,21 +7,14 @@ public class LocalizedText : MonoBehaviour
 {
     private TextMeshProUGUI text;
     private string key;
-
+    
     private void Start()
     {
-        LocalizationManager.OnLanguageChange += OnLanguageChanged;
+        Init();
+        LocalizationManager.OnLanguageChange += OnLanguageChange;
     }
 
-    private void OnDestroy()
-    {
-        LocalizationManager.OnLanguageChange -= OnLanguageChanged;
-    }
-
-    private void OnLanguageChanged()
-    {
-        Localize();
-    }
+    // private void OnDestroy() => LocalizationManager.OnLanguageChange -= OnLanguageChange;
 
     private void Init()
     {
@@ -30,9 +22,14 @@ public class LocalizedText : MonoBehaviour
         key = text.text;
     }
     
+    private void OnLanguageChange()
+    {
+        Localize();
+    }
+
     public void Localize(string newKey = null, [CanBeNull] string additional = null)
     {
-        if(text == null) Init();
+        Init();
 
         if (newKey != null) key = newKey;
 

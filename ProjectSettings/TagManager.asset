@@ -17,7 +17,7 @@ TagManager:
   - MonsterLegs
   - Player
   - PlayerLegs
-  - 
+  - Chest
   - 
   - 
   - 
@@ -53,4 +53,7 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 3044133733
+    locked: 0
+  - name: UI
+    uniqueID: 4107152583
     locked: 0

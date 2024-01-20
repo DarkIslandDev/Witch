@@ -4,23 +4,29 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    [Header("Monster spawning settings")] [SerializeField]
-    private float monsterSpawnBufferDistance;
-
+    [Header("Monster spawning settings")]
+    [SerializeField] private float monsterSpawnBufferDistance;
     [SerializeField] private float playerDirectionSpawnWeight;
 
-    [Header("Chest spawning settings")] [SerializeField]
-    private float chestSpawnRange = 5f;
+    [Header("Chest spawning settings")] 
+    [SerializeField] private float chestSpawnRange = 5f;
 
-    [Header("Object pool settings")] [SerializeField]
-    private GameObject monsterPoolParent;
+    [Header("Object pool settings")] 
+    [SerializeField] private GameObject monsterPoolParent;
     private MonsterPool[] monsterPools;
+    
     [SerializeField] private GameObject projectilePoolParent;
     private List<ProjectilePool> projectilePools;
     private Dictionary<GameObject, int> projectileIndexByPrefab;
+    
     [SerializeField] private GameObject throwablePoolParent;
     private List<ThrowablePool> throwablePools;
     private Dictionary<GameObject, int> throwableIndexByPrefab;
+    
+    [SerializeField] private GameObject boomerangPoolParent;
+    private List<BoomerangPool> boomerangPools;
+    private Dictionary<GameObject, int> boomerangIndexByPrefab;
+    
     [SerializeField] private CoinPool coinPool;
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private ExpGemPool expGemPool;
@@ -30,10 +36,10 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private DamageTextPool textPool;
     [SerializeField] private GameObject textPrefab;
 
-    [Header("Dependencies")]
+    [Header("Dependencies")] 
     [SerializeField] private SpriteRenderer flashSpriteRenderer;
     [SerializeField] private Camera playerCamera;
-    private Player player;
+    protected Player player;
     private StatisticManager statisticManager;
     private PlayerInventory playerInventory;
     private FastList<Monster> livingMonsters;
@@ -50,6 +56,7 @@ public class EntityManager : MonoBehaviour
 
     public FastList<Monster> LivingMonsters => livingMonsters;
     public FastList<Collectable> MagneticCollectables => magneticCollectables;
+    public Player Player => player;
     public PlayerInventory PlayerInventory => playerInventory;
     public AbilitySelectionDialog AbilitySelectionDialog { get; private set; }
 
@@ -62,7 +69,7 @@ public class EntityManager : MonoBehaviour
         AbilitySelectionDialog = abilitySelectionDialog;
 
         // Определить размер экрана в мировом пространстве, чтобы спавнить врагов за его пределами
-        playerCamera = Camera.main;
+        if (Camera.main != null) playerCamera = Camera.main;
         Vector2 bottomLeft = playerCamera.ViewportToWorldPoint(new Vector3(0, 0, playerCamera.nearClipPlane));
         Vector2 topRight = playerCamera.ViewportToWorldPoint(new Vector3(1, 1, playerCamera.nearClipPlane));
         screenWidthWorldSpace = topRight.x - bottomLeft.x;
@@ -87,11 +94,17 @@ public class EntityManager : MonoBehaviour
         monsterPools[^1] = monsterPoolParent.AddComponent<MonsterPool>();
         // monsterPools[^1].Init(this, player,levelBlueprint.finalBoss.bossPrefab);
 
+        // Инициализируем пул снарядов для каждого типа снарядов дальнего боя
         projectileIndexByPrefab = new Dictionary<GameObject, int>();
         projectilePools = new List<ProjectilePool>();
 
+        // Инициализируем метательный пул для каждого метательного типа
         throwableIndexByPrefab = new Dictionary<GameObject, int>();
         throwablePools = new List<ThrowablePool>();
+
+        // Инициализируем пул бумерангов для каждого типа бумерангов
+        boomerangIndexByPrefab = new Dictionary<GameObject, int>();
+        boomerangPools = new List<BoomerangPool>();
         
         // Инициализируем оставшиеся одноразовые пулы объектов
         expGemPool.Init(this, player, expGemPrefab);
@@ -240,9 +253,7 @@ public class EntityManager : MonoBehaviour
     }
 
     #endregion
-
-    // Exp gem
-
+    
     #region ExpGem Spawning
 
     public void SpawnGemsAroundPlayer(int gemCount, GemType gemType = GemType.BlueXPGem)
@@ -401,6 +412,34 @@ public class EntityManager : MonoBehaviour
         }
 
         return throwableIndexByPrefab[throwablePrefab];
+    }
+
+    #endregion
+
+    #region Boomerangs
+
+    public Boomerang SpawnBoomerang(int boomerangIndex, Vector2 position, float damage, float knockback,
+        float throwDistance, float throwTime, LayerMask targetLayer)
+    {
+        Boomerang boomerang = boomerangPools[boomerangIndex].Get();
+        boomerang.Setup(boomerangIndex, position, damage, knockback, throwDistance, throwTime, targetLayer);
+        return boomerang;
+    }
+
+    public void DespawnBoomerang(int boomerangIndex, Boomerang boomerang) => boomerangPools[boomerangIndex].Release(boomerang);
+
+    public int AddPoolForBoomerang(GameObject boomerangPrefab)
+    {
+        if (!boomerangIndexByPrefab.ContainsKey(boomerangPrefab))
+        {
+            boomerangIndexByPrefab[boomerangPrefab] = boomerangPools.Count;
+            BoomerangPool boomerangPool = boomerangPoolParent.AddComponent<BoomerangPool>();
+            boomerangPool.Init(this, player, boomerangPrefab);
+            boomerangPools.Add(boomerangPool);
+            return boomerangPools.Count - 1;
+        }
+
+        return boomerangIndexByPrefab[boomerangPrefab];
     }
 
     #endregion

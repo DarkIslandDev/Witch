@@ -9,7 +9,7 @@ public class LevelBlueprint : ScriptableObject
     public float levelTime = 1800;
 
     [Header("Абилки")] 
-    public GameObject[] abilityPrefabs;
+    public List<GameObject> abilityPrefabs;
 
     [Header("Настройки монстров")] 
     public MonsterContainer[] monsters;

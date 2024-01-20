@@ -1,10 +1,21 @@
 ﻿using System;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+
+public enum GameState
+{
+    Pause,
+    Game,
+    LevelUp,
+    GameOver
+}
 
 public class LevelManager : MonoBehaviour
 {
+    public GameState gameState;
+    
     [SerializeField] private LevelBlueprint levelBlueprint;
     [SerializeField] private Player player;
     [SerializeField] private EntityManager entityManager;
@@ -14,37 +25,41 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private StatisticManager statisticManager;
     [SerializeField] private GameOverDialog gameOverDialog;
     [SerializeField] private GameTimer gameTimer;
+    [SerializeField] private PauseMenu pauseMenu;
 
     private float levelTime = 0;
     private float timeSinceLastMonsterSpawned;
     private float timeSinceLastChestSpawned;
     private bool miniBossSpawned = false;
     private bool finalBossSpawned = false;
-
+    
+    private void Awake()
+    {
+        Init(levelBlueprint);
+    }
+    
     public void Init(LevelBlueprint levelBlueprint)
     {
         this.levelBlueprint = levelBlueprint;
         levelTime = 0;
         
         entityManager.Init(this.levelBlueprint, player, playerInventory, statisticManager, abilitySelectionDialog);
-        
+
         abilityManager.Init(this.levelBlueprint, entityManager, player, abilityManager);
-        abilitySelectionDialog.Init(abilityManager, entityManager, player);
+        abilitySelectionDialog.Init(this, abilityManager, entityManager, player, pauseMenu);
         
-        GameObject playerGo = Instantiate(player.PlayerBlueprint.playerGFXPrefab, player.transform.position, quaternion.identity, player.transform);
+        GameObject playerGo = Instantiate(player.PlayerBlueprint.playerGFXPrefab, player.transform);
         player.spriteRenderer = playerGo.GetComponent<SpriteRenderer>();
         player.Init(entityManager, abilityManager, statisticManager);
         player.OnDeath.AddListener(GameOver);
-
+        
         entityManager.SpawnGemsAroundPlayer(this.levelBlueprint.initialGemCount, this.levelBlueprint.initialGemType);
         entityManager.SpawnChest(levelBlueprint.chestBlueprint);
-        
+
+        gameState = GameState.Game;
     }
 
-    private void Awake()
-    {
-        Init(levelBlueprint);
-    }
+    
 
     private void Update()
     {
@@ -78,11 +93,32 @@ public class LevelManager : MonoBehaviour
             }
             timeSinceLastChestSpawned = Mathf.Repeat(timeSinceLastChestSpawned, levelBlueprint.chestSpawnDelay);
         }
+        
+        // SwitchGameState();
     }
 
+    public void SwitchGameState()
+    {
+        switch (gameState)
+        {
+            case GameState.Game:
+                pauseMenu.Pause(false, 1);
+                break;
+            case GameState.Pause:
+            case GameState.LevelUp:
+            case GameState.GameOver:
+                pauseMenu.Pause(true, 0);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+    
     private void GameOver()
     {
-        Time.timeScale = 0;
+        gameState = GameState.GameOver;
+        SwitchGameState();
+        
         int coinCount = PlayerPrefs.GetInt("Coins");
         PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
         gameOverDialog.Open(false, statisticManager);
@@ -90,7 +126,8 @@ public class LevelManager : MonoBehaviour
     
     public void LevelPassed(Monster finalBossKilled)
     {
-        Time.timeScale = 0;
+        gameState = GameState.GameOver;
+        
         int coinCount = PlayerPrefs.GetInt("Coins");
         PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
         gameOverDialog.Open(true, statisticManager);
@@ -98,13 +135,18 @@ public class LevelManager : MonoBehaviour
 
     public void Restart()
     {
-        Time.timeScale = 1;
+        gameState = GameState.Game;
+        SwitchGameState();
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1;
+        
+        int coinCount = PlayerPrefs.GetInt("Coins");
+        PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
         SceneManager.LoadScene("MainMenu");
     }
 }

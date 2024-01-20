@@ -63,8 +63,8 @@ public class Monster : IDamageable
         
         monsterHitBox.enabled = true;
         monsterHitBox.size = monsterSpriteRenderer.bounds.size;
-        monsterHitBox.offset = Vector2.up * monsterHitBox.size.y/2;
-        monsterLegsCollider.radius = monsterHitBox.size.x/2.5f;
+        monsterHitBox.offset = Vector2.up * monsterHitBox.size.y / 2;
+        monsterLegsCollider.radius = monsterHitBox.size.x / 2.5f;
         centerTransform = (new GameObject("Center Transform")).transform;
         centerTransform.SetParent(transform);
         centerTransform.position = transform.position + (Vector3)monsterHitBox.offset;
@@ -82,12 +82,9 @@ public class Monster : IDamageable
         monsterSpriteRenderer.flipX = ((player.transform.position.x - rigidbody.position.x) < 0);
     }
 
-    protected virtual void FixedUpdate()
-    {
-        
-    }
+    protected virtual void FixedUpdate() { }
 
-    public override void TakeDamage(float damage, Vector2 knockBack = default(Vector2))
+    public override void TakeDamage(float damage, Vector2 knockBack = default)
     {
         if (alive)
         {
@@ -96,7 +93,7 @@ public class Monster : IDamageable
             
             if(hitAnimationCoroutine != null) StopCoroutine(hitAnimationCoroutine);
 
-            if (knockBack != default(Vector2))
+            if (knockBack != default)
             {
                 rigidbody.velocity += knockBack * Mathf.Sqrt(rigidbody.drag);
                 knockedBack = true;
@@ -116,7 +113,9 @@ public class Monster : IDamageable
     protected IEnumerator HitAnimation()
     {
         monsterSpriteRenderer.sharedMaterial = hitMaterial;
+        
         yield return new WaitForSeconds(0.15f);
+        
         monsterSpriteRenderer.sharedMaterial = defaultMaterial;
         knockedBack = false;
     }

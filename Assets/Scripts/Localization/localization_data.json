@@ -1,0 +1,117 @@
+﻿{
+        "languages": ["en", "ru"],
+        "table": [
+                {
+                        "key": "en",
+                        "values":
+                        [
+                                { "lang": "en", "value": "English"},
+                                { "lang": "ru", "value": "English"}
+                        ]
+                },
+                {
+                        "key": "ru",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Русский"},
+                                { "lang": "ru", "value": "Русский"}
+                        ]
+                },
+                {
+                        "key": "UI",
+                        "values":
+                        [
+                                { "lang": "en", "value": "UI"},
+                                { "lang": "ru", "value": "UI"}
+                        ]
+                },
+                {
+                        "key": "start_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Play"},
+                                { "lang": "ru", "value": "Играть"}
+                        ]
+                },
+                {
+                        "key": "pause_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Pause"},
+                                { "lang": "ru", "value": "Пауза"}
+                        ]
+                },
+                {
+                        "key": "return_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Return"},
+                                { "lang": "ru", "value": "Вернутся"}
+                        ]
+                },
+                {
+                        "key": "back_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Back"},
+                                { "lang": "ru", "value": "Назад"}
+                        ]
+                },
+                {
+                        "key": "exit_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Exit"},
+                                { "lang": "ru", "value": "Выход"}
+                        ]
+                },
+                {
+                        "key": "settings_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Settings"},
+                                { "lang": "ru", "value": "Настройки"}
+                        ]
+                },
+                {
+                        "key": "continue_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Continue"},
+                                { "lang": "ru", "value": "Продолжить"}
+                        ]
+                },
+                {
+                        "key": "restart_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Restart"},
+                                { "lang": "ru", "value": "Заново"}
+                        ]
+                },
+                {
+                        "key": "character_selection_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Character selection"},
+                                { "lang": "ru", "value": "Выбор персонажа"}
+                        ]
+                },
+                {
+                        "key": "change_language_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "Change language"},
+                                { "lang": "ru", "value": "Сменить язык"}
+                        ]
+                },
+                {
+                        "key": "new_key",
+                        "values":
+                        [
+                                { "lang": "en", "value": "New!"},
+                                { "lang": "ru", "value": "Новый!"}
+                        ]
+                }
+        ]
+}

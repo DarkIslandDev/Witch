@@ -13,5 +13,4 @@ public class PlayerUI : MonoBehaviour
     public TextMeshProUGUI healthText;
 
     public AbilitySelectionDialog abilitySelectionDialog;
-    
 }

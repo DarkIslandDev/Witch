@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public enum Rarity
 {
@@ -16,10 +14,9 @@ public enum Rarity
 
 public abstract class Ability : MonoBehaviour
 {
-    [Header("Детали Абилки")] [SerializeField]
-    protected Sprite abilityImage;
-
-    [SerializeField] protected new string abilityName;
+    [Header("Детали Абилки")] 
+    [SerializeField] protected Sprite abilityImage;
+    [SerializeField] protected string abilityName;
     [TextArea(5, 5)] [SerializeField] protected string abilityDescription;
     [SerializeField] private Rarity rarity = Rarity.Common;
     [SerializeField] private AbilitySlotUI abilitySlotHUD;
@@ -28,10 +25,11 @@ public abstract class Ability : MonoBehaviour
     protected AbilityManager abilityManager;
     protected EntityManager entityManager;
     protected Player player;
+    
     public List<IUpgradeableValue> upgradeableValues;
 
     protected int level = 0;
-    protected int maxLevel = 0;
+    protected int maxLevel;
     protected bool owned = false;
 
     public int Level => level;
@@ -41,20 +39,7 @@ public abstract class Ability : MonoBehaviour
     public string AbilityName => abilityName;
     public float DropWeight => (float)rarity;
 
-    public virtual string Description
-    {
-        get
-        {
-            if (!owned)
-            {
-                return LocalizationManager.GetTranslate(abilityDescription);
-            }
-            else
-            {
-                return GetUpgradeDescriptions();
-            }
-        }
-    }
+    public virtual string Description => !owned ? abilityDescription : GetUpgradeDescriptions();
 
     public virtual void Init(AbilityManager abilityManager, EntityManager entityManager, Player player)
     {
@@ -62,22 +47,29 @@ public abstract class Ability : MonoBehaviour
         this.entityManager = entityManager;
         this.player = player;
         // Регистрация всех обновляемых полей, прикрепленных к этому объекту
-        upgradeableValues = GetType()
+        upgradeableValues = this.GetType()
             .GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
             .Where(fi => typeof(IUpgradeableValue).IsAssignableFrom(fi.FieldType))
             .Select(fi => fi.GetValue(this) as IUpgradeableValue)
             .ToList();
-        upgradeableValues.ForEach(x => this.abilityManager.RegisterUpgradeableValue(x));
-
+        upgradeableValues.ForEach(x => abilityManager.RegisterUpgradeableValue(x));
         if (upgradeableValues.Count > 0)
-            maxLevel = upgradeableValues.Max(x => x.UpgradeCount) +
-                       1; //  максимальный уровень = общее количество улучшений + 1 для начального уровня.
+            maxLevel = upgradeableValues.Max(x => x.UpgradeCount) + 1; //  максимальный уровень = общее количество улучшений + 1 для начального уровня.
     }
 
     public virtual void Select()
     {
         if (!owned)
         {
+            if (IsWeapon)
+            {
+                abilityManager.ownedWeaponAbilities.Add(this);
+            }
+            else
+            {
+                abilityManager.ownedEquipmentAbilities.Add(this);
+            }
+            
             owned = true;
             level++;
             InstantiateAbilityIconOnHUD();
@@ -86,10 +78,9 @@ public abstract class Ability : MonoBehaviour
         else
         {
             level++;
-            Upgrade();
             abilitySlotPauseMenuUI.UpdateTextLevel(level.ToString());
+            Upgrade();
         }
-
     }
 
     private void InstantiateAbilityIconOnHUD()
@@ -115,6 +106,6 @@ public abstract class Ability : MonoBehaviour
     {
         string description = "";
         upgradeableValues.ForEach(x => description += x.GetUpgradeDescription());
-        return LocalizationManager.GetTranslate(description);
+        return description;
     }
 }

@@ -46,8 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityImage: {fileID: 8928679839934948527, guid: 69e1db5e6f097704283b61c0b691c050, type: 3}
   abilityName: holywater_Key
-  abilityDescription: "holywaterDesc_Key\r"
+  abilityDescription: "holywaterdesc_Key\r"
   rarity: 50
+  abilitySlotHUD: {fileID: 0}
+  abilitySlotPauseMenuUI: {fileID: 0}
   IsWeapon: 1
   throwablePrefab: {fileID: 5653869514240477841, guid: 4b2586f3077225741ad6d7788870c86d, type: 3}
   monsterLayer:
@@ -57,6 +59,7 @@ MonoBehaviour:
   throwRate:
     value: 4
     upgrades: []
+    level: 0
   damage:
     value: 3
     upgrades:
@@ -64,15 +67,19 @@ MonoBehaviour:
     - 1
     - 1
     - 1
+    level: 0
   knockback:
     value: 0.1
     upgrades: []
+    level: 0
   cooldown:
     value: 2
     upgrades: []
+    level: 0
   throwableCount:
     value: 1
     upgrades: 01000000010000000100000001000000
+    level: 0
     projectilesPer: 1
   duration:
     value: 3
@@ -81,6 +88,7 @@ MonoBehaviour:
     - 0.2
     - 0.2
     - 0.2
+    level: 0
   waterRadius:
     value: 0.5
     upgrades:
@@ -88,6 +96,7 @@ MonoBehaviour:
     - 0.2
     - 0.15
     - 0.15
+    level: 0
   waterDamageRate:
     value: 3
     upgrades:
@@ -95,3 +104,4 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
+    level: 0

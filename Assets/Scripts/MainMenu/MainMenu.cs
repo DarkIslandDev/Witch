@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MainMenu : MonoBehaviour
 {
@@ -7,30 +6,30 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private LocalizedText startText;
     [SerializeField] private LocalizedText exitText;
-    [SerializeField] private LocalizedText settingsText;
-    [SerializeField] private LocalizedText back1Text;
-    [SerializeField] private LocalizedText back2Text;
     [SerializeField] private LocalizedText changeLanguageText;
+    [SerializeField] private LocalizedText characterSelectionText;
+    [SerializeField] private LocalizedText[] settingsTexts;
+    [SerializeField] private LocalizedText[] backTexts;
 
     private void Start()
     {
         characterSelector.Init();
-        OnLanguageChanged();
-        LocalizationManager.OnLanguageChange += OnLanguageChanged;
+        
+        OnLanguageChange();
+        LocalizationManager.OnLanguageChange += OnLanguageChange;
     }
 
-    private void OnDestroy()
-    {
-        LocalizationManager.OnLanguageChange -= OnLanguageChanged;
-    }
+    private void OnDestroy() => LocalizationManager.OnLanguageChange -= OnLanguageChange;
 
-    private void OnLanguageChanged()
+    private void OnLanguageChange()
     {
-        startText.Localize("start_Key", "");
-        exitText.Localize("exit_Key", "");
-        settingsText.Localize("settings_Key", "");
-        back1Text.Localize("back_Key", "");
-        back2Text.Localize("back_Key", "");
-        changeLanguageText.Localize("changelanguage_Key", "");
+        startText.Localize("start_key");
+        exitText.Localize("exit_key");
+        changeLanguageText.Localize("change_language_key");
+        characterSelectionText.Localize("character_selection_key");
+
+        foreach (LocalizedText settingsText in settingsTexts) settingsText.Localize("settings_key");
+        
+        foreach (LocalizedText backText in backTexts) backText.Localize("back_key");
     }
 }

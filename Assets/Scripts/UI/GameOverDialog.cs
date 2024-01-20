@@ -14,7 +14,6 @@ public class GameOverDialog : DialogBox
 
     public void Open(bool levelPassed, StatisticManager statisticManager)
     {
-        
         statusText.Localize(levelPassed ? "win_Key" : "lose_Key");
         retryText.Localize("retry_Key");
         exitText.Localize("exit_Key");

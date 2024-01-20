@@ -11,8 +11,6 @@ public class HolyWaterThrowable : Throwable
     protected float waterRadius;
     protected float waterDamageRate;
 
-
-
     public void SetupWater(float duration, float waterRadius, float waterDamageRate)
     {
         this.duration = duration;
@@ -29,19 +27,9 @@ public class HolyWaterThrowable : Throwable
     {
         throwableSpriteRenderer.enabled = false;
         holyWater.gameObject.SetActive(true);
-        float t = 1;
-        
-        while (holyWater.Burn(this, damage, knockback, duration, waterRadius, waterDamageRate, targetLayer).Equals(true))
-        {
-            dissolveRenderer.sharedMaterial.SetFloat("_DissolveAmount", t);
-            t -= Time.deltaTime;
-            yield return null;
-        }
-        
-        dissolveRenderer.sharedMaterial.SetFloat("_DissolveAmount", 0.0f);
-        
         waterExplosion.Play();
         yield return StartCoroutine(holyWater.Burn(this, damage, knockback, duration, waterRadius, waterDamageRate, targetLayer));
+        dissolveRenderer.sharedMaterial.SetFloat("_DissolveAmount", 0.5f);
         holyWater.gameObject.SetActive(false);
         throwableSpriteRenderer.enabled = true;
         DestroyThrowable();

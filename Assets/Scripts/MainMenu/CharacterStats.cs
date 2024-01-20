@@ -14,9 +14,9 @@ public class CharacterStats : MonoBehaviour
     {
         this.characterBlueprint = characterBlueprint;
 
-        hpText.Localize("hp_Key", characterBlueprint.hp.ToString());
-        armorText.Localize("armor_Key", characterBlueprint.armor.ToString());
-        atkText.Localize("atk_Key", characterBlueprint.atk.ToString());
-        mvspdText.Localize("mvspd_Key", characterBlueprint.moveSpeed.ToString());
+        hpText.Localize("hp_key", characterBlueprint.hp.ToString());
+        armorText.Localize("armor_key", characterBlueprint.armor.ToString());
+        atkText.Localize("atk_key", characterBlueprint.atk.ToString());
+        mvspdText.Localize("mvspd_key", characterBlueprint.moveSpeed.ToString());
     }
 }

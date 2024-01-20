@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5551160465866389456
 Transform:
   m_ObjectHideFlags: 0
@@ -45,8 +45,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilityImage: {fileID: 21300000, guid: 656ef040ed4cec24e95b03f8912cb7d2, type: 3}
-  abilityName: Claymore
-  abilityDescription: Claymore
+  abilityName: claymore_Key
+  abilityDescription: 'claymoredesc_Key
+
+'
   rarity: 50
   abilitySlotHUD: {fileID: 0}
   abilitySlotPauseMenuUI: {fileID: 0}
@@ -60,16 +62,19 @@ MonoBehaviour:
     - 30
     - 30
     - 30
+    level: 0
   knockback:
     value: 1
     upgrades:
     - 1
     - 1
+    level: 0
   cooldown:
     value: 1
     upgrades:
     - 0.5
     - 0.1
+    level: 0
   weaponSpriteRenderer: {fileID: 0}
   swordPrefab: {fileID: 6245966212570178159, guid: 7d9d98d06b89b3742a4fb134283674b9, type: 3}
   layerMask:
@@ -78,20 +83,11 @@ MonoBehaviour:
   projectileCount:
     value: 1
     upgrades: 01000000
+    level: 0
     projectilesPer: 1
   aoe:
     value: 0.5
     upgrades:
     - 0.2
     - 0.2
-  damage:
-    value: 30
-    upgrades:
-    - 30
-    - 30
-    - 30
-  knockback:
-    value: 1
-    upgrades:
-    - 1
-    - 1
+    level: 0

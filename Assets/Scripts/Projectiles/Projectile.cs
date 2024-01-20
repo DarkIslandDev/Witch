@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 public class Projectile : MonoBehaviour
 {
@@ -59,7 +58,7 @@ public class Projectile : MonoBehaviour
         moveCoroutine = StartCoroutine(Move());
     }
 
-    public virtual IEnumerator Move()
+    protected virtual IEnumerator Move()
     {
         float distanceTravelled = 0;
         float timeOffScreen = 0;
@@ -68,7 +67,9 @@ public class Projectile : MonoBehaviour
             float step = speed * Time.deltaTime;
             transform.position += step * (Vector3)direction;
             distanceTravelled += step;
-            transform.RotateAround(transform.position, Vector3.back, Time.deltaTime * 100 * rotationSpeed);
+            // transform.RotateAround(transform.position, Vector3.back, Time.deltaTime * 100 * rotationSpeed);
+            // transform.Rotate(new Vector3(0, 0, direction.x));
+            transform.localRotation = Quaternion.RotateTowards(new Quaternion(transform.position.x, transform.position.y, transform.position.z, 0), new Quaternion(direction.x, direction.y, 0,0), 0);
             speed -= airResistance * Time.deltaTime;
             yield return null;
         }
@@ -113,8 +114,5 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D collider)
-    {
-        CollisionCheck(collider);
-    }
+    protected virtual void OnTriggerEnter2D(Collider2D collider) => CollisionCheck(collider);
 }

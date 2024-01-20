@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class AbilityManager : MonoBehaviour
 {
-    [HideInInspector] public Player player;
+    private Player player;
     private LevelBlueprint levelBlueprint;
     private WeightedAbilities newAbilities;
     private WeightedAbilities ownedAbilities;
+    public List<Ability> ownedWeaponAbilities;
+    public List<Ability> ownedEquipmentAbilities;
     private FastList<IUpgradeableValue> registeredUpgradeableValues;
-
-    protected const float abilityMaxCount = 6;
     
     public int DamageUpgradeablesCount { get; set; } = 0;
     public int KnockbackUpgradeablesCount { get; set; } = 0;
@@ -29,6 +26,7 @@ public class AbilityManager : MonoBehaviour
     public int BleedDamageUpgradeablesCount { get; set; } = 0;
     public int BleedRateUpgradeablesCount { get; set; } = 0;
     public int BleedDurationUpgradeablesCount { get; set; } = 0;
+    public int HealthUpgradeablesCount { get; set; } = 0;
     public int MovementSpeedUpgradeablesCount { get; set; } = 0;
     public int ArmorUpgradeablesCount { get; set; } = 0;
     public int FireRateUpgradeablesCount { get; set; } = 0;
@@ -36,39 +34,39 @@ public class AbilityManager : MonoBehaviour
     public int RotationSpeedUpgradeablesCount { get; set; } = 0;
 
     public GameObject iconSlotHUDPrefab;
-    public GameObject iconSlotPausePanelPrefab;
     public Transform weaponIconsHUDParent;
-    public Transform weaponIconsPausePanelParent;
-    public List<AbilitySlotUI> ownedWeaponAbility;
     public Transform equipmentIconsHUDParent;
+    
+    public GameObject iconSlotPausePanelPrefab;
+    public Transform weaponIconsPausePanelParent;
     public Transform equipmentIconsPausePanelParent;
-    public List<AbilitySlotUI> ownedEquipmentAbility;
 
-    public void Init(LevelBlueprint levelBlueprint, EntityManager entityManager, Player player,
-        AbilityManager abilityManager)
+    public void Init(LevelBlueprint levelBlueprint, EntityManager entityManager, Player player, AbilityManager abilityManager)
     {
         this.levelBlueprint = levelBlueprint;
         this.player = player;
 
         registeredUpgradeableValues = new FastList<IUpgradeableValue>();
 
-        newAbilities = new WeightedAbilities();
-        foreach (GameObject abilityPrefab in levelBlueprint.abilityPrefabs)
-        {
-            Ability ability = Instantiate(abilityPrefab, transform).GetComponent<Ability>();
-            ability.Init(abilityManager, entityManager, player);
-            newAbilities.Add(ability);
-        }
-
         ownedAbilities = new WeightedAbilities();
-        foreach (GameObject abilityPrefab in player.PlayerBlueprint.startingAbilities)
+        foreach (Ability ability in player.PlayerBlueprint.startingAbilities.Select(abilityPrefab =>
+                     Instantiate(abilityPrefab, transform).GetComponent<Ability>()))
         {
-            Ability ability = Instantiate(abilityPrefab, transform).GetComponent<Ability>();
             ability.Init(abilityManager, entityManager, player);
             ability.Select();
             ownedAbilities.Add(ability);
         }
-        
+
+        newAbilities = new WeightedAbilities();
+        foreach (Ability ability in levelBlueprint.abilityPrefabs.SelectMany(abilityPrefab =>
+                     from ownedAbility in player.PlayerBlueprint.startingAbilities
+                     where abilityPrefab !=
+                           ownedAbility
+                     select Instantiate(abilityPrefab, transform).GetComponent<Ability>()))
+        {
+            ability.Init(abilityManager, entityManager, player);
+            newAbilities.Add(ability);
+        }
     }
 
     public void RegisterUpgradeableValue(IUpgradeableValue upgradeableValue, bool inUse = false)
@@ -83,7 +81,7 @@ public class AbilityManager : MonoBehaviour
         UpgradeableValue<TValue>[] upgradeableValues =
             registeredUpgradeableValues.OfType<T>().ToArray() as UpgradeableValue<TValue>[];
 
-        foreach (UpgradeableValue<TValue> upgradeableValue in upgradeableValues)
+        foreach (UpgradeableValue<TValue> upgradeableValue in upgradeableValues!)
         {
             upgradeableValue.Upgrade(value);
         }
@@ -105,15 +103,31 @@ public class AbilityManager : MonoBehaviour
 
         // Попытка показать игроку до двух предметов, которые у него уже есть (чтобы он мог их улучшить)
         int ownedAbilitiesCount = availableOwnedAbilities.Count < 2 ? availableOwnedAbilities.Count : 2;
+
         for (int i = 0; i < ownedAbilitiesCount; i++)
         {
             if (ResolveChance(OwnedChance)) selectedAbilities.Add(PullAbility(availableOwnedAbilities));
         }
 
+        //  Удаляем способности из пула доступных если собственные способности достигли максимума
+        if (ownedWeaponAbilities.Count == 6)
+        {
+            availableNewAbilities?.Remove(availableNewAbilities.Find(x => x.IsWeapon));
+        }
+        
+        if (ownedEquipmentAbilities.Count == 6)
+        {
+            availableNewAbilities?.Remove(availableNewAbilities.Find(x => !x.IsWeapon));
+        }
+        
         // Выбираем оставшиеся способности из пула доступных способностей
         int availableAbilitiesCount = selectedAbilitiesCount - selectedAbilities.Count;
-        if (availableAbilitiesCount > availableNewAbilities.Count)
+
+        if (availableAbilitiesCount > availableNewAbilities!.Count)
+        {
             availableAbilitiesCount = availableNewAbilities.Count;
+        }
+        
         for (int i = 0; i < availableAbilitiesCount; i++)
         {
             selectedAbilities.Add(PullAbility(availableNewAbilities));
@@ -157,29 +171,19 @@ public class AbilityManager : MonoBehaviour
         }
     }
 
-    public bool HasAvailableAbilities()
-    {
-        foreach (Ability ability in ownedAbilities)
-        {
-            if (ability.RequirementsMet()) return true;
-        }
+    public bool HasAvailableAbilities() => ownedAbilities.Any(ability => ability.RequirementsMet()) ||
+                                           newAbilities.Any(ability => ability.RequirementsMet());
 
-        foreach (Ability ability in newAbilities)
-        {
-            if (ability.RequirementsMet()) return true;
-        }
-
-        return false;
-    }
-
-    private static WeightedAbilities ExtractAvailableAbilities(WeightedAbilities abilities)
+    private WeightedAbilities ExtractAvailableAbilities(WeightedAbilities abilities)
     {
         WeightedAbilities availableAbilities = new WeightedAbilities();
 
         foreach (Ability ability in abilities)
         {
             if (ability.RequirementsMet())
+            {
                 availableAbilities.Add(ability);
+            }
         }
 
         foreach (Ability ability in availableAbilities)
@@ -195,20 +199,23 @@ public class AbilityManager : MonoBehaviour
     /// </summary>
     private Ability PullAbility(WeightedAbilities abilities)
     {
-        float rand = Random.Range(0f, abilities.Weight);
-        float cumulative = 0;
-        foreach (Ability ability in abilities)
+        while (true)
         {
-            cumulative += ability.DropWeight;
-            if (rand < cumulative)
+            float rand = Random.Range(0f, abilities.Weight);
+            float cumulative = 0;
+            foreach (Ability ability in abilities)
             {
-                abilities.Remove(ability);
-                return ability;
+                cumulative += ability.DropWeight;
+                if (rand < cumulative)
+                {
+                    abilities.Remove(ability);
+                    return ability;
+                }
             }
-        }
 
-        Debug.LogError("Не удалось получить способность!");
-        return null;
+            Debug.LogError("Не удалось вытащить абилку");
+            return null;
+        }
     }
 
     /// <summary>
@@ -230,46 +237,4 @@ public class AbilityManager : MonoBehaviour
     /// Отвечает, выпадет ли четвертая абилка
     /// </summary>
     private static bool ResolveChance(Func<float> chanceFunction) => Random.Range(0.0f, 1.0f) < chanceFunction();
-
-    private class WeightedAbilities : IEnumerable<Ability>
-    {
-        private FastList<Ability> abilities;
-        private float weight;
-
-        public float Weight
-        {
-            get => weight;
-            set => weight = value;
-        }
-
-        public int Count => abilities.Count;
-
-        public WeightedAbilities()
-        {
-            abilities = new FastList<Ability>();
-            weight = 0;
-        }
-
-        public void Add(Ability ability)
-        {
-            abilities.Add(ability);
-            weight += ability.DropWeight;
-        }
-
-        public void Remove(Ability ability)
-        {
-            weight -= ability.DropWeight;
-            abilities.Remove(ability);
-        }
-
-        public IEnumerator<Ability> GetEnumerator()
-        {
-            foreach (Ability ability in abilities)
-            {
-                yield return ability;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
 }

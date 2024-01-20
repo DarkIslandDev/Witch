@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7688806339233282805
 Transform:
   m_ObjectHideFlags: 0
@@ -50,6 +50,8 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -154,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityImage: {fileID: -4121877427344541656, guid: 14e442fd9125fd24da6fc851cb808d79, type: 3}
   abilityName: sword_Key
-  abilityDescription: swordDesc_Key
+  abilityDescription: sworddesc_Key
   rarity: 50
   abilitySlotHUD: {fileID: 0}
   abilitySlotPauseMenuUI: {fileID: 0}
@@ -170,9 +172,11 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
+    level: 0
   knockback:
     value: 1
     upgrades: []
+    level: 0
   cooldown:
     value: 1
     upgrades:
@@ -181,7 +185,14 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
+    level: 0
   weaponSpriteRenderer: {fileID: 6068978171504348256}
   stabOffset: 0.25
   stabDistance: 0.25
   stabTime: 0.25
+  swordPrefab: {fileID: 6245966212570178159, guid: 7d9d98d06b89b3742a4fb134283674b9, type: 3}
+  projectileCount:
+    value: 1
+    upgrades: 01000000
+    level: 0
+    projectilesPer: 1

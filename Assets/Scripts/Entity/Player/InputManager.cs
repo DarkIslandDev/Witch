@@ -2,29 +2,14 @@
 
 public class InputManager : MonoBehaviour
 {
-    // #region Instance
-    //
-    // public static InputManager instance;
-    //
-    // private void Awake()
-    // {
-    //     if (instance == null)
-    //     {
-    //         instance = this;
-    //     }
-    // }
-    //
-    // #endregion
-
     public Player player;
-    // public WhipWeapon whip;
-    
+
     public bool xInput;
     public bool bInput;
     public bool aInput;
     public bool yInput;
     public bool startInput;
-    
+
     public Vector2 movementInput;
     private PlayerInput playerInput;
 
@@ -33,10 +18,16 @@ public class InputManager : MonoBehaviour
         if (playerInput == null)
         {
             playerInput = new PlayerInput();
-            
+
             playerInput.Player.Move.performed += i => movementInput = i.ReadValue<Vector2>();
+            playerInput.Player.Pause.performed += i => startInput = true;
+
+            playerInput.Player.Health.performed += i => xInput = true;
+            playerInput.Player.Shield.performed += i => bInput = true;
+            playerInput.Player.Speed.performed += i => aInput = true;
+            playerInput.Player.Magnet.performed += i => yInput = true;
         }
-        
+
         playerInput.Enable();
     }
 
@@ -44,34 +35,30 @@ public class InputManager : MonoBehaviour
 
     public void HandleMovement(float speed)
     {
-        player.playerMovement.Movement(movementInput, speed);
-        player.playerAnimator.UpdateAnimatorValues(movementInput);
+        if (!player.playerUI.pauseMenu.paused)
+        {
+            player.playerMovement.Movement(movementInput, speed);
+            player.playerAnimator.UpdateAnimatorValues(movementInput);
+        }
     }
-    
-    public void HandleCamera() => player.playerCamera.CalculateCameraPosition();
 
-    // public void HandleWhipAttack(float deltaTime) => whip.Attack(deltaTime, player.playerAnimator.isLeft);
+    public void HandleCamera() => player.playerCamera.CalculateCameraPosition();
 
     public void HandleQuickSlots()
     {
-        playerInput.Player.Health.performed += i => xInput = true;
-        playerInput.Player.Shield.performed += i => bInput = true;
-        playerInput.Player.Speed.performed += i => aInput = true;
-        playerInput.Player.Magnet.performed += i => yInput = true;
-        
-        if (xInput) player.playerInventory.inventorySlots[3].UseItem();
-        
-        if (bInput) player.playerInventory.inventorySlots[1].UseItem();
-        
-        if (aInput) player.playerInventory.inventorySlots[2].UseItem();
-        
         if (yInput) player.playerInventory.inventorySlots[0].UseItem();
+
+        if (bInput) player.playerInventory.inventorySlots[1].UseItem();
+
+        if (aInput) player.playerInventory.inventorySlots[2].UseItem();
+
+        if (xInput) player.playerInventory.inventorySlots[3].UseItem();
     }
 
     public void PauseGame()
     {
-        playerInput.Player.Pause.performed += i => startInput = true;
-        
-        if(startInput) player.playerUI.pauseMenu.PlayPause();
+        player.playerUI.pauseMenu.TakePause(startInput);
     }
+
+    public void StartInput() => startInput = !startInput;
 }

@@ -3,12 +3,12 @@
     public static string GetUpgradeDescription(string upgradeName, float upgrade)
     {
         string plus = upgrade > 0 ? "+" : "";
-        return $"{LocalizationManager.GetTranslate(upgradeName)}: {plus} {upgrade * 100} ";
+        return $"{LocalizationManager.GetTranslate(upgradeName)}: {plus} {upgrade * 100}% \n";
     }
 
     public static string GetUpgradeDescription(string upgradeName, int upgrade)
     {
         string plus = upgrade > 0 ? "+" : "";
-        return $"{LocalizationManager.GetTranslate(upgradeName)}: {plus} {upgrade} ";
+        return $"{LocalizationManager.GetTranslate(upgradeName)}: {plus} {upgrade}; \n";
     }
 }

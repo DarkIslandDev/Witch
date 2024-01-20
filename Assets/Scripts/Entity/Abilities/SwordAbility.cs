@@ -32,9 +32,9 @@ public class SwordAbility : MeleeAbility
         base.Upgrade();
         RefreshSwords();
 
-        for (int i = 0; i < swords.Count; i++)
+        foreach (Sword sword in swords)
         {
-            swords[i].weaponSize *= aoe.Value * 2;
+            sword.weaponSize *= aoe.Value * 2;
         }
     }
 
@@ -57,7 +57,7 @@ public class SwordAbility : MeleeAbility
     private void AddSword()
     {
         Sword sword = Instantiate(swordPrefab, player.transform).GetComponent<Sword>();
-        sword.Init(this, layerMask, player);
+        sword.Init(layerMask, player);
         swords.Add(sword);
 
         for (int i = 0; i < swords.Count; i++)
@@ -67,7 +67,7 @@ public class SwordAbility : MeleeAbility
             int rotX = 0;
             int rotY = 0;
             int rotZ = 0;
-
+            
             if (i % 2 == 0)
             {
                 x = -aoe.Value - 1f;

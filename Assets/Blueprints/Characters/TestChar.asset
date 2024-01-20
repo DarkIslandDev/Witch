@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 086754e98a044ebc86239c972020eb0a, type: 3}
   m_Name: TestChar
   m_EditorClassIdentifier: 
-  name: Jora
-  characterSprite: {fileID: 54143031572052567, guid: be21120a20bd3b84d80402b8ad3af641, type: 3}
+  name: Witch
+  characterSprite: {fileID: 6795967406537311549, guid: 7e565fc333bbb9949b6a2cf47812b23e, type: 3}
   owned: 1
   cost: 999
   hp: 100
@@ -26,4 +26,4 @@ MonoBehaviour:
   acceleration: 50
   playerGFXPrefab: {fileID: 8364934282410544769, guid: 8d7bf7f5cfb019c40921c44753823ab5, type: 3}
   startingAbilities:
-  - {fileID: 5232359349457351147, guid: 563b95f5d0db521478ec4d1d4b2f5ad6, type: 3}
+  - {fileID: 4667053934757091315, guid: d6aa012d4b43c71498f49b9f04fa9e2b, type: 3}

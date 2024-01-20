@@ -5,35 +5,44 @@ public class AbilitySelectionDialog : DialogBox
 {
     [SerializeField] private Transform abilityCardsParent;
     [SerializeField] private GameObject abilityCardPrefab;
-    [SerializeField] private PauseMenu pauseMenu;
     [SerializeField] private GameObject particles;
     [SerializeField] private ChestBlueprint failsafeChestBlueprint;
     [SerializeField] private float cardPopupDelay = 0.1f;
     [SerializeField] private LocalizedText skipButton;
+    [SerializeField] private LocalizedText refreshAbilitiesButton;
 
+    private LevelManager levelManager;
     private AbilityManager abilityManager;
     private EntityManager entityManager;
     private Player player;
+    private PauseMenu pauseMenu;
     private List<AbilityCard> abilityCards;
     private List<Ability> displayedAbilities;
     private bool menuOpen = false;
 
     public bool MenuOpen => menuOpen;
     
-    public void Init(AbilityManager abilityManager, EntityManager entityManager, Player player)
+    public void Init(LevelManager levelManager, AbilityManager abilityManager, EntityManager entityManager, Player player, PauseMenu pauseMenu)
     {
+        this.levelManager = levelManager;
         this.abilityManager = abilityManager;
         this.entityManager = entityManager;
         this.player = player;
+        this.pauseMenu = pauseMenu;
     }
 
     public void Open(bool failsafe = true)
     {
+        player.inputManager.startInput = true;
+        levelManager.gameState = GameState.LevelUp;
+        levelManager.SwitchGameState();
+        
         base.Open();
         menuOpen = true;
-        Time.timeScale = 0;
-        pauseMenu.TimeIsFrozen = true;
-        skipButton.Localize("skip_Key");
+        
+        skipButton.Localize("skip_key");
+        refreshAbilitiesButton.Localize("refresh_abilities_key");
+        
         // particles.SetActive(true);
 
         displayedAbilities = abilityManager.SelectAbilities();
@@ -51,21 +60,48 @@ public class AbilitySelectionDialog : DialogBox
             Close();
         }
     }
-
-    private void Populate(List<Ability> abilities)
+    
+    public void RefreshAbilities()
     {
-        if (abilityCards == null)
-            abilityCards = new List<AbilityCard>();
-
+        if (abilityCards == null) abilityCards = new List<AbilityCard>();
+        
+        List<Ability> abilities = abilityManager.SelectAbilities();
+        
         int i = 0;
+
         for (; i < abilities.Count; i++)
         {
-            if (i >= abilityCards.Count) 
-                abilityCards.Add( Instantiate(abilityCardPrefab, abilityCardsParent).GetComponent<AbilityCard>());
+            if (i >= abilityCards.Count)
+            {
+                abilityCards.Add(Instantiate(abilityCardPrefab, abilityCardsParent).GetComponent<AbilityCard>());
+            }
             
             abilityCards[i].Init(this, abilityManager, abilities[i], cardPopupDelay * i);
             abilityCards[i].gameObject.SetActive(true);
         }
+
+        for (; i < abilityCards.Count; i++)
+        {
+            abilityCards[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void Populate(List<Ability> abilities)
+    {
+        if (abilityCards == null) abilityCards = new List<AbilityCard>();
+
+        int i = 0;
+        for (; i < abilities.Count; i++)
+        {
+            if (i >= abilityCards.Count)
+            {
+                abilityCards.Add(Instantiate(abilityCardPrefab, abilityCardsParent).GetComponent<AbilityCard>());
+            }
+            
+            abilityCards[i].Init(this, abilityManager, abilities[i], cardPopupDelay * i);
+            abilityCards[i].gameObject.SetActive(true);
+        }
+        
         for (; i < abilityCards.Count; i++)
         {
             abilityCards[i].gameObject.SetActive(false);
@@ -76,11 +112,14 @@ public class AbilitySelectionDialog : DialogBox
     {
         abilityManager.ReturnAbilities(displayedAbilities);
         menuOpen = false;
-        Time.timeScale = 1;
-        pauseMenu.TimeIsFrozen = false;
-        // particles.SetActive(false);
+        player.inputManager.startInput = false;
+        
+        levelManager.gameState = GameState.Game;
+        levelManager.SwitchGameState();
         base.Close();
     }
+
+    
 
     public bool HasAvailableAbilities() => abilityManager.HasAvailableAbilities();
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FastList<T> : IEnumerable<T>
@@ -31,14 +33,11 @@ public class FastList<T> : IEnumerable<T>
 
     public void Remove(T item)
     {
-        int index;
-        if (!indexByItem.TryGetValue(item, out index))
+        if (!indexByItem.Remove(item, out int index))
         {
-            Debug.LogError("Итем не найден в листе");
+            // Debug.LogError("Итем не найден в листе");
             return;
         }
-
-        indexByItem.Remove(item);
 
         int last = itemList.Count - 1;
         // Особый случай: Удаление последнего элемента
@@ -61,4 +60,37 @@ public class FastList<T> : IEnumerable<T>
     public IEnumerator<T> GetEnumerator() => ((IEnumerable<T>)itemList).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    // public T this[int index]
+    // {
+    //     get
+    //     {
+    //         if (index < 0 || index > this.Count() - 1)
+    //         {
+    //             throw new ArgumentOutOfRangeException(nameof(index));
+    //         }
+    //
+    //         return this.Skip(index).First();
+    //     }
+    //     set
+    //     {
+    //         if (index < 0)
+    //         {
+    //             throw new ArgumentOutOfRangeException(nameof(index));
+    //         }
+    //
+    //         List<T> current = itemList;
+    //         int i = 0;
+    //         while (current != null && i < index)
+    //         {
+    //             current = current;
+    //             i++;
+    //         }
+    //
+    //         if (current == null)
+    //         {
+    //             throw new ArgumentOutOfRangeException(nameof(index));
+    //         }
+    //     }
+    // }
 }
