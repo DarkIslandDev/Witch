@@ -31,6 +31,18 @@ public class PauseMenu : MonoBehaviour
         set => timeIsFrozen = value;
     }
 
+    public void Open()
+    {
+        pauseButton.SetActive(false);
+        pauseMenu.SetActive(true);
+    }
+
+    public void Close()
+    {
+        pauseButton.SetActive(true);
+        pauseMenu.SetActive(false);
+    }
+
     public void ClosePause()
     {
         levelManager.gameState = GameState.Game;

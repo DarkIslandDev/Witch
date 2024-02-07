@@ -1,7 +1,6 @@
 ﻿using System;
-using Unity.Mathematics;
+using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public enum GameState
@@ -32,6 +31,8 @@ public class LevelManager : MonoBehaviour
     private float timeSinceLastChestSpawned;
     private bool miniBossSpawned = false;
     private bool finalBossSpawned = false;
+
+    public Player Player => player;
     
     private void Awake()
     {
@@ -57,10 +58,12 @@ public class LevelManager : MonoBehaviour
         entityManager.SpawnChest(levelBlueprint.chestBlueprint);
 
         gameState = GameState.Game;
+        
+        pauseMenu.Close();
+        gameOverDialog.Close();
+        abilitySelectionDialog.Close();
     }
-
     
-
     private void Update()
     {
         levelTime -= Time.deltaTime;
@@ -83,6 +86,25 @@ public class LevelManager : MonoBehaviour
                 timeSinceLastMonsterSpawned = Mathf.Repeat(timeSinceLastMonsterSpawned, monsterSpawnDelay);
             }
         }
+        // else
+        // {
+        //     LevelPassed();
+        // }
+
+        if (!miniBossSpawned && levelTime > levelBlueprint.miniBosses[0].spawnTime)
+        {
+            miniBossSpawned = true;
+            entityManager.SpawnMonsterRandomPosition(levelBlueprint.monsters.Length,
+                levelBlueprint.miniBosses[0].bossBlueprint);
+        }
+        
+        if (!finalBossSpawned && levelTime > levelBlueprint.levelTime)
+        {
+            //entityManager.KillAllMonsters();
+            finalBossSpawned = true;
+            Monster finalBoss = entityManager.SpawnMonsterRandomPosition(levelBlueprint.monsters.Length, levelBlueprint.finalBoss.bossBlueprint);
+            finalBoss.OnKilled.AddListener(LevelPassed);
+        }
         
         timeSinceLastChestSpawned += Time.deltaTime;
         if (timeSinceLastChestSpawned >= levelBlueprint.chestSpawnDelay)
@@ -93,8 +115,6 @@ public class LevelManager : MonoBehaviour
             }
             timeSinceLastChestSpawned = Mathf.Repeat(timeSinceLastChestSpawned, levelBlueprint.chestSpawnDelay);
         }
-        
-        // SwitchGameState();
     }
 
     public void SwitchGameState()
@@ -121,7 +141,7 @@ public class LevelManager : MonoBehaviour
         
         int coinCount = PlayerPrefs.GetInt("Coins");
         PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
-        gameOverDialog.Open(false, statisticManager);
+        gameOverDialog.Open(false, player.CanRevive, statisticManager);
     }
     
     public void LevelPassed(Monster finalBossKilled)
@@ -130,7 +150,16 @@ public class LevelManager : MonoBehaviour
         
         int coinCount = PlayerPrefs.GetInt("Coins");
         PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
-        gameOverDialog.Open(true, statisticManager);
+        gameOverDialog.Open(true, player.CanRevive, statisticManager);
+    }
+    
+    public void LevelPassed()
+    {
+        gameState = GameState.GameOver;
+        
+        int coinCount = PlayerPrefs.GetInt("Coins");
+        PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
+        gameOverDialog.Open(true, player.CanRevive, statisticManager);
     }
 
     public void Restart()
@@ -148,5 +177,15 @@ public class LevelManager : MonoBehaviour
         int coinCount = PlayerPrefs.GetInt("Coins");
         PlayerPrefs.SetInt("Coins", coinCount + statisticManager.CoinsGained);
         SceneManager.LoadScene("MainMenu");
+    }
+
+    public void RevivePlayer()
+    {
+        player.Revive();
+        
+        gameState = GameState.Game;
+        SwitchGameState();
+        
+        gameOverDialog.Close();
     }
 }

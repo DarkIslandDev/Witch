@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SaltAbility : Ability
 {
     [Header("Salt stats")] 
-    [SerializeField] protected GameObject saltCirclePrefab;
+    [SerializeField] protected SpriteRenderer saltCircleSprite;
     [SerializeField] protected LayerMask monsterLayer;
     [SerializeField] protected UpgradeableDamage damage;
     [SerializeField] protected UpgradeableAOE raduis;
@@ -14,43 +13,50 @@ public class SaltAbility : Ability
     
     private float timeSinceLastAttack;
     private FastList<GameObject> hitMonsters;
-    private List<GameObject> saltCircles;
-    private CircleCollider2D damageCollider;
+    // private List<GameObject> saltCircles;
+    private PolygonCollider2D damageCollider;
 
     private void Awake()
     {
-        damageCollider = GetComponent<CircleCollider2D>();
+        damageCollider = GetComponentInChildren<PolygonCollider2D>();
     }
 
     public override void Init(AbilityManager abilityManager, EntityManager entityManager, Player player)
     {
         base.Init(abilityManager, entityManager, player);
         transform.SetParent(player.transform);
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = new Vector3(0, 0.15f, 0);
+
     }
 
     protected override void Use()
     {
         base.Use();        
         gameObject.SetActive(true);
-        projectileCount.OnChanged?.AddListener(RefreshSaltCircles);
+        // projectileCount.OnChanged?.AddListener(RefreshSaltCircles);
         hitMonsters = new FastList<GameObject>();
-        saltCircles = new List<GameObject>();
+        // saltCircles = new List<GameObject>();
         
-        for (int i = 0; i < projectileCount.Value; i++)
-        {
-            AddSaltCircle();
-        }
+        IncreaseSaltCircle();
+        
+        // for (int i = 0; i < projectileCount.Value; i++)
+        // {
+        //     AddSaltCircle();
+        // }
     }
 
     protected override void Upgrade()
     {
         base.Upgrade();
-        RefreshSaltCircles();
+        IncreaseSaltCircle();
+        
+        // RefreshSaltCircles();
     }
 
     private void Update()
     {
+        // saltCircleSprite.transform.Rotate(new Vector3(0,0,transform.rotation.z), 360);
+
         timeSinceLastAttack += Time.deltaTime;
         
         if (!(timeSinceLastAttack >= 1 / damageRate.Value)) return;
@@ -64,24 +70,30 @@ public class SaltAbility : Ability
         timeSinceLastAttack = Mathf.Repeat(timeSinceLastAttack, 1 / damageRate.Value);
     }
 
-    private void RefreshSaltCircles()
+    private void IncreaseSaltCircle()
     {
-        for (int i = saltCircles.Count; i < projectileCount.Value; i++)
-        {
-            AddSaltCircle();
-        }
+        saltCircleSprite.transform.localScale = Vector3.one * raduis.Value * 2;
+        // damageCollider.radius = raduis.Value;
     }
-
-    private void AddSaltCircle()
-    {
-        GameObject circle = Instantiate(saltCirclePrefab, transform);
-        saltCircles.Add(circle);
-        
-        SpriteRenderer spriteRenderer = circle.GetComponent<SpriteRenderer>();
-        spriteRenderer.transform.localScale = Vector3.one * raduis.Value * 2;
-        
-        damageCollider.radius = raduis.Value;
-    }
+    
+    // private void RefreshSaltCircles()
+    // {
+    //     for (int i = saltCircles.Count; i < projectileCount.Value; i++)
+    //     {
+    //         AddSaltCircle();
+    //     }
+    // }
+    //
+    // private void AddSaltCircle()
+    // {
+    //     GameObject circle = Instantiate(saltCirclePrefab, transform);
+    //     saltCircles.Add(circle);
+    //     
+    //     SpriteRenderer spriteRenderer = circle.GetComponent<SpriteRenderer>();
+    //     spriteRenderer.transform.localScale = Vector3.one * raduis.Value * 2;
+    //     
+    //     damageCollider.radius = raduis.Value;
+    // }
 
     private void Damage(IDamageable damageable)
     {
@@ -92,7 +104,7 @@ public class SaltAbility : Ability
 
     private void DeregisterMonster(Monster monster) => hitMonsters.Remove(monster.gameObject);
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerStay2D(Collider2D collider)
     {
         if (!hitMonsters.Contains(collider.gameObject) && (monsterLayer & (1 << collider.gameObject.layer)) != 0)
         {

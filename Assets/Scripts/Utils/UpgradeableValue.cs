@@ -17,7 +17,7 @@ public abstract class UpgradeableValue<T> : IUpgradeableValue
 {
     [SerializeField] protected T value;
     [SerializeField] protected List<T> upgrades;
-    [SerializeField] protected int level = 0;
+    protected int level = 0;
     
     protected AbilityManager abilityManager;
 
@@ -71,7 +71,7 @@ public abstract class UpgradeableFloat : UpgradeableValue<float>
 [Serializable]
 public class UpgradeableDamage : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "atkpower_UpKey";
+    protected override string UpgradeName { get; set; } = "atkpower_upkey";
 
     public override void RegisterInUse() => abilityManager.DamageUpgradeablesCount++;
 }
@@ -79,7 +79,7 @@ public class UpgradeableDamage : UpgradeableFloat
 [Serializable]
 public class UpgradeableDamageRate : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "atkspeed_UpKey";
+    protected override string UpgradeName { get; set; } = "atkspeed_upkey";
 
     public override void RegisterInUse() => abilityManager.FireRateUpgradeablesCount++;
 }
@@ -87,7 +87,7 @@ public class UpgradeableDamageRate : UpgradeableFloat
 [Serializable]
 public class UpgradeableWeaponCooldown : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "weaponcooldown_UpKey";
+    protected override string UpgradeName { get; set; } = "weaponcooldown_upkey";
 
     public override void RegisterInUse() => abilityManager.WeaponCooldownUpgradeablesCount++;
 }
@@ -95,7 +95,7 @@ public class UpgradeableWeaponCooldown : UpgradeableFloat
 [Serializable]
 public class UpgradeableRecoveryCooldown : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "recoverycooldown_UpKey";
+    protected override string UpgradeName { get; set; } = "recoverycooldown_upkey";
 
     public override void RegisterInUse() => abilityManager.RecoveryCooldownUpgradeablesCount++;
 }
@@ -103,7 +103,7 @@ public class UpgradeableRecoveryCooldown : UpgradeableFloat
 [Serializable]
 public class UpgradeableDuration : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "duration_UpKey";
+    protected override string UpgradeName { get; set; } = "duration_upkey";
 
     public override void RegisterInUse() => abilityManager.DurationUpgradeablesCount++;
 }
@@ -111,7 +111,7 @@ public class UpgradeableDuration : UpgradeableFloat
 [Serializable]
 public class UpgradeableAOE : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "aoe_UpKey";
+    protected override string UpgradeName { get; set; } = "aoe_upkey";
 
     public override void RegisterInUse() => abilityManager.AOEUpgradeablesCount++;
 }
@@ -119,7 +119,7 @@ public class UpgradeableAOE : UpgradeableFloat
 [Serializable]
 public class UpgradeableKnockback : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "knockback_UpKey";
+    protected override string UpgradeName { get; set; } = "knockback_upkey";
 
     public override void RegisterInUse() => abilityManager.KnockbackUpgradeablesCount++;
 }
@@ -127,7 +127,7 @@ public class UpgradeableKnockback : UpgradeableFloat
 [Serializable]
 public class UpgradeableProjectileSpeed : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "projectilespeed_UpKey";
+    protected override string UpgradeName { get; set; } = "projectilespeed_upkey";
 
     public override void RegisterInUse() => abilityManager.ProjectileSpeedUpgradeablesCount++;
 }
@@ -135,7 +135,7 @@ public class UpgradeableProjectileSpeed : UpgradeableFloat
 [Serializable]
 public class UpgradeableRecoveryChance : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "recoverychance_UpKey";
+    protected override string UpgradeName { get; set; } = "recoverychance_upkey";
 
     public override void RegisterInUse() => abilityManager.RecoveryChanceUpgradeablesCount++;
 }
@@ -143,7 +143,7 @@ public class UpgradeableRecoveryChance : UpgradeableFloat
 [Serializable]
 public class UpgradeableBleedDamage : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "bleedingattackpower_UpKey";
+    protected override string UpgradeName { get; set; } = "bleedingattackpower_upkey";
 
     public override void RegisterInUse() => abilityManager.BleedDamageUpgradeablesCount++;
 }
@@ -151,7 +151,7 @@ public class UpgradeableBleedDamage : UpgradeableFloat
 [Serializable]
 public class UpgradeableBleedRate : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "bleedingrate_UpKey";
+    protected override string UpgradeName { get; set; } = "bleedingrate_upkey";
 
     public override void RegisterInUse() => abilityManager.BleedRateUpgradeablesCount++;
 }
@@ -159,9 +159,25 @@ public class UpgradeableBleedRate : UpgradeableFloat
 [Serializable]
 public class UpgradeableBleedDuration : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "bleedingduration_UpKey";
+    protected override string UpgradeName { get; set; } = "bleedingduration_upkey";
 
     public override void RegisterInUse() => abilityManager.BleedDurationUpgradeablesCount++;
+}
+
+[Serializable]
+public class UpgradeableMovementSpeed : UpgradeableFloat
+{
+    protected override string UpgradeName { get; set; } = "movementspeed_upkey";
+
+    public override void RegisterInUse() => abilityManager.MovementSpeedUpgradeablesCount++;
+}
+
+[Serializable]
+public class UpgradeableRotationSpeed : UpgradeableFloat
+{
+    protected override string UpgradeName { get; set; } = "rotationspeed_upkey";
+
+    public override void RegisterInUse() => abilityManager.RotationSpeedUpgradeablesCount++;
 }
 
 [Serializable]
@@ -172,19 +188,10 @@ public class UpgradeableHealth : UpgradeableFloat
 }
 
 [Serializable]
-public class UpgradeableMovementSpeed : UpgradeableFloat
+public class UpgradeableCollectionRadius : UpgradeableFloat
 {
-    protected override string UpgradeName { get; set; } = "movementspeed_UpKey";
-
-    public override void RegisterInUse() => abilityManager.MovementSpeedUpgradeablesCount++;
-}
-
-[Serializable]
-public class UpgradeableRotationSpeed : UpgradeableFloat
-{
-    protected override string UpgradeName { get; set; } = "rotationspeed_UpKey";
-
-    public override void RegisterInUse() => abilityManager.RotationSpeedUpgradeablesCount++;
+    protected override string UpgradeName { get; set; } = "collection_radius_upkey";
+    public override void RegisterInUse() => abilityManager.CollectionRadiusUpgradeablesCount++;
 }
 
 /// <summary>
@@ -210,7 +217,7 @@ public class UpgradeableProjectileCount : UpgradeableInt
 {
     [SerializeField] protected int projectilesPer = 1;
     public override int Value => projectilesPer * value;
-    [SerializeField] protected override string UpgradeName { get; set; } = "projectilecount_UpKey";
+    protected override string UpgradeName { get; set; } = "projectilecount_upkey";
     public override void RegisterInUse() => abilityManager.ProjectileCountUpgradeablesCount++;
     public override string GetUpgradeDescription()
     {
@@ -222,13 +229,12 @@ public class UpgradeableProjectileCount : UpgradeableInt
 [Serializable]
 public class UpgradeableRecovery : UpgradeableInt
 {
-    protected override string UpgradeName { get; set; } = "recovery_UpKey";
+    protected override string UpgradeName { get; set; } = "recovery_upkey";
     public override void RegisterInUse() => abilityManager.RecoveryUpgradeablesCount++;
 }
 
-[SerializeField]
 public class UpgradeableArmor : UpgradeableInt
 {
-    protected override string UpgradeName { get; set; } = "armor_UpKey";
+    protected override string UpgradeName { get; set; } = "armor_upkey";
     public override void RegisterInUse() => abilityManager.ArmorUpgradeablesCount++;
 }

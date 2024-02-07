@@ -1,5 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOverDialog : DialogBox
 {
@@ -11,12 +12,13 @@ public class GameOverDialog : DialogBox
     [SerializeField] private TextMeshProUGUI damageDealt;
     [SerializeField] private TextMeshProUGUI damageTaken;
     [SerializeField] private GameObject background;
+    [SerializeField] private GameObject reviveButton;
 
-    public void Open(bool levelPassed, StatisticManager statisticManager)
+    public void Open(bool levelPassed, bool canRevive, StatisticManager statisticManager)
     {
         statusText.Localize(levelPassed ? "win_Key" : "lose_Key");
-        retryText.Localize("retry_Key");
-        exitText.Localize("exit_Key");
+        retryText.Localize("retry_key");
+        exitText.Localize("exit_key");
         
         coinsGained.text = $"{statisticManager.CoinsGained}";
         enemiesRouted.text = statisticManager.MonstersKilled.ToString();
@@ -24,6 +26,8 @@ public class GameOverDialog : DialogBox
         damageTaken.text = statisticManager.DamageTaken.ToString();
         
         background.SetActive(true);
+        
+        if(canRevive) reviveButton.SetActive(true);
         
         base.Open();
     }

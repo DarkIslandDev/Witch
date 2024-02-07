@@ -7,7 +7,8 @@ public class PointBar : MonoBehaviour
 {
     [SerializeField] protected RectTransform barBackground;
     [SerializeField] protected RectTransform barFill;
-    [SerializeField] [CanBeNull] protected TextMeshProUGUI text;
+    [SerializeField] protected TextMeshProUGUI text;
+    [SerializeField] protected bool displayText;
 
     protected UnityEvent onEmpty;
     protected UnityEvent onFull;
@@ -25,24 +26,37 @@ public class PointBar : MonoBehaviour
         this.minPoints = minPoints;
         this.maxPoints = maxPoints;
         this.clamp = clamp;
+
+        if (displayText ==false) text.text = string.Empty;
+        
         UpdateDisplay();
     }
 
-    public void AddPoints(float points)
+    public void AddCurrentPoints(float points)
     {
         currentPoints += points;
         if (currentPoints >= maxPoints) currentPoints = maxPoints;
         
-        text.text = $"{currentPoints} / {maxPoints}";
+        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
         
         CheckPoints();
         UpdateDisplay();
     }
 
+    public void AddMaxPoints(float points)
+    {
+        maxPoints += points;
+
+        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
+        CheckPoints();
+        UpdateDisplay();
+    }
+    
     public void SubstractPoints(float points)
     {
         currentPoints -= points;
-        text.text = $"{currentPoints} / {maxPoints}";
+        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
         CheckPoints();
         UpdateDisplay();
     }
@@ -50,7 +64,7 @@ public class PointBar : MonoBehaviour
     public void SetPoints(float points)
     {
         currentPoints = points;
-        text.text = $"{currentPoints} / {maxPoints}";
+        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
         CheckPoints();
         UpdateDisplay();
     }

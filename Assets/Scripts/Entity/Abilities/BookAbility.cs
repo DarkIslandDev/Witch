@@ -2,13 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class BookAbility : Ability
 {
-    [Header("Book stats")] [SerializeField]
-    protected GameObject bookPrefab;
-
-    [SerializeField] protected LayerMask layerMask;
+    [Header("Book stats")] 
+    [SerializeField] protected GameObject bookPrefab;
+    [SerializeField] protected LayerMask monsterLayer;
     [SerializeField] protected UpgradeableProjectileCount projectileCount;
     [SerializeField] protected UpgradeableAOE radius;
     [SerializeField] protected UpgradeableDamage damage;
@@ -38,18 +38,28 @@ public class BookAbility : Ability
     {
         base.Upgrade();
         RefreshBooks();
+        
         timeSinceLastAttack = cooldown.Value;
     }
 
     private void Update()
     {
-        RotateBooks();
+        timeSinceLastAttack += Time.deltaTime;
+
+        if (timeSinceLastAttack >= cooldown.Value)
+        {
+            StartCoroutine(RotateBooks());
+        }
+
     }
 
-    private void RotateBooks()
+    private IEnumerator RotateBooks()
     {
+        
         if (books.Count != 0)
         {
+            HideOrShowBooks(true);
+            
             for (int i = 0; i < books.Count; i++)
             {
                 float theta = (2 * Mathf.PI * i) / books.Count;
@@ -58,6 +68,12 @@ public class BookAbility : Ability
                                                                0);
             }
         }
+
+        yield return new WaitForSeconds(duration.Value);
+        
+        timeSinceLastAttack = Mathf.Repeat(timeSinceLastAttack, cooldown.Value);
+
+        HideOrShowBooks(false);
     }
 
     private void HideOrShowBooks(bool enable)
@@ -70,8 +86,8 @@ public class BookAbility : Ability
 
     public void Damage(IDamageable damageable)
     {
-        Vector2 knockbackDirection = (damageable.transform.position - player.transform.position).normalized;
-        damageable.TakeDamage(damage.Value, knockback.Value * knockbackDirection);
+        Vector2 knockbackDirection = (damageable.transform.position - player.CenterTransform.position).normalized;
+        damageable.TakeDamage((int)damage.Value, knockback.Value * knockbackDirection);
         player.OnDealDamage?.Invoke(damage.Value);
     }
 
@@ -85,8 +101,8 @@ public class BookAbility : Ability
 
     private void AddBook()
     {
-        Book book = Instantiate(bookPrefab, player.transform).GetComponent<Book>();
-        book.Init(this, layerMask);
+        Book book = Instantiate(bookPrefab, player.CenterTransform).GetComponent<Book>();
+        book.Init(this, monsterLayer);
         books.Add(book);
     }
 }

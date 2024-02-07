@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Speed potion
   m_EditorClassIdentifier: 
   inventoryStackSize: 10
+  cooldown: 15

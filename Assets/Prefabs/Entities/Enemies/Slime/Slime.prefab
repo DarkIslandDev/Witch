@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1791347968932956969}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 2507102999915479422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -309,7 +309,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.5019608, g: 0, b: 0, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5034,9 +5034,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6c4a8cf1cc42caa2e8bc9fc67e34be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultMaterial: {fileID: 2100000, guid: 6d70d5e13f383904eb740fdbf5148eb0, type: 2}
-  hitMaterial: {fileID: 2100000, guid: ec5cf23edf8077847894c4e7092f64bd, type: 2}
-  deathMaterial: {fileID: 2100000, guid: a33c9587356b9dd429291793734de6ca, type: 2}
+  defaultMaterial: {fileID: 2100000, guid: 6bfcedb5daf9a7146b14ea66e28e05a8, type: 2}
+  hitMaterial: {fileID: 2100000, guid: 7172fc39b0ac47843b0edb611386e59f, type: 2}
+  deathMaterial: {fileID: 2100000, guid: 13a5de5737689c2409836f9a65ef875e, type: 2}
   deathParticles: {fileID: 3506290148687160202}
   shadow: {fileID: 1791347968932956969}
 --- !u!50 &5041731942372046169
@@ -5100,7 +5100,7 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: -0.4}
+  m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
 --- !u!1 &3826785500308076147
 GameObject:
@@ -5115,7 +5115,7 @@ GameObject:
   - component: {fileID: 9045502981220409768}
   - component: {fileID: 8518743482548786070}
   m_Layer: 7
-  m_Name: Sprite
+  m_Name: Sprite / Hitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5158,7 +5158,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 6bfcedb5daf9a7146b14ea66e28e05a8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5179,7 +5179,7 @@ SpriteRenderer:
   m_SortingLayerID: -482243861
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7282886668606283007, guid: a7902c6c5d71cb543a7841cf6c43137b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a7902c6c5d71cb543a7841cf6c43137b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

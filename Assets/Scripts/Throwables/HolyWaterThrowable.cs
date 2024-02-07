@@ -5,7 +5,6 @@ public class HolyWaterThrowable : Throwable
 {
     [SerializeField] protected HolyWaterFire holyWater;
     [SerializeField] protected ParticleSystem waterExplosion;
-    [SerializeField] protected SpriteRenderer dissolveRenderer;
 
     protected float duration;
     protected float waterRadius;
@@ -28,9 +27,11 @@ public class HolyWaterThrowable : Throwable
         throwableSpriteRenderer.enabled = false;
         holyWater.gameObject.SetActive(true);
         waterExplosion.Play();
-        yield return StartCoroutine(holyWater.Burn(this, damage, knockback, duration, waterRadius, waterDamageRate, targetLayer));
-        dissolveRenderer.sharedMaterial.SetFloat("_DissolveAmount", 0.5f);
+
+        yield return StartCoroutine(holyWater.Burn(this, duration, waterRadius, waterDamageRate, targetLayer));
+        
         holyWater.gameObject.SetActive(false);
+
         throwableSpriteRenderer.enabled = true;
         DestroyThrowable();
     }

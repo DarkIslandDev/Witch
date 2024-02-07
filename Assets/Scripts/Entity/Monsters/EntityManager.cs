@@ -91,8 +91,8 @@ public class EntityManager : MonoBehaviour
             monsterPools[i].Init(this, player, levelBlueprint.monsters[i].monsterPrefab);
         }
 
-        monsterPools[^1] = monsterPoolParent.AddComponent<MonsterPool>();
-        // monsterPools[^1].Init(this, player,levelBlueprint.finalBoss.bossPrefab);
+        monsterPools[monsterPools.Length - 1] = monsterPoolParent.AddComponent<MonsterPool>();
+        monsterPools[monsterPools.Length - 1].Init(this, player, levelBlueprint.finalBoss.bossPrefab);
 
         // Инициализируем пул снарядов для каждого типа снарядов дальнего боя
         projectileIndexByPrefab = new Dictionary<GameObject, int>();
@@ -133,10 +133,9 @@ public class EntityManager : MonoBehaviour
 
     public void KillAllMonsters()
     {
-        foreach (Monster monster in livingMonsters.ToList())
+        foreach (Monster monster in livingMonsters.ToList().Where(monster => !(monster as BossMonster)))
         {
             StartCoroutine(monster.Killed(false));
-            // if (!monster as BossMonster) StartCoroutine(monster.Killed(false));
         }
     }
 
@@ -178,7 +177,7 @@ public class EntityManager : MonoBehaviour
 
     private Vector2 GetRandomMonsterSpawnPosition()
     {
-        Vector2[] sideDirections = new Vector2[] { Vector2.left, Vector2.up, Vector2.right, Vector2.down };
+        Vector2[] sideDirections = { Vector2.left, Vector2.up, Vector2.right, Vector2.down };
         int sideIndex = Random.Range(0, 4);
         Vector2 spawnPosition;
         if (sideIndex % 2 == 0)
@@ -211,7 +210,7 @@ public class EntityManager : MonoBehaviour
             Vector2.Dot(player.Velocity.normalized, sideDirections[3])
         };
         float extraWeight = sideWeights.Sum() / playerDirectionSpawnWeight;
-        int badSideCount = sideWeights.Where(x => x <= 0).Count();
+        int badSideCount = sideWeights.Count(x => x <= 0);
         for (int i = 0; i < sideWeights.Length; i++)
         {
             if (sideWeights[i] <= 0)

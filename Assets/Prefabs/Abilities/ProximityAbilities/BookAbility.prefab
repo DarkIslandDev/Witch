@@ -52,13 +52,12 @@ MonoBehaviour:
   abilitySlotPauseMenuUI: {fileID: 0}
   IsWeapon: 1
   bookPrefab: {fileID: 4542184049295267417, guid: ce40c237c3d723741a7d31733faaf970, type: 3}
-  layerMask:
+  monsterLayer:
     serializedVersion: 2
     m_Bits: 128
   projectileCount:
     value: 1
     upgrades: 01000000010000000100000001000000
-    level: 0
     projectilesPer: 1
   radius:
     value: 1
@@ -70,7 +69,6 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
-    level: 0
   damage:
     value: 10
     upgrades:
@@ -78,7 +76,6 @@ MonoBehaviour:
     - 0.33
     - 0.25
     - 1
-    level: 0
   knockback:
     value: 1
     upgrades:
@@ -86,7 +83,6 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
-    level: 0
   speed:
     value: 2
     upgrades:
@@ -94,7 +90,6 @@ MonoBehaviour:
     - 0.2
     - 0.15
     - 0.2
-    level: 0
   cooldown:
     value: 3
     upgrades:
@@ -105,9 +100,8 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
-    level: 0
   duration:
-    value: 3
+    value: 5
     upgrades:
     - 0.1
     - 0.1
@@ -116,4 +110,3 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
-    level: 0

@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &592601063223550666
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8634794627755245658}
+  - component: {fileID: 4398465712473553691}
+  m_Layer: 0
+  m_Name: HorizontalSwordAbility
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8634794627755245658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592601063223550666}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4398465712473553691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 592601063223550666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ef277617cd243b499d220390b181723, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityImage: {fileID: 21300000, guid: 47ec22deaaa88b94d9c2445d0ac74c7c, type: 3}
+  abilityName: sword_Key
+  abilityDescription: sworddesc_Key
+  rarity: 50
+  abilitySlotHUD: {fileID: 0}
+  abilitySlotPauseMenuUI: {fileID: 0}
+  IsWeapon: 1
+  swordPrefab: {fileID: 6245966212570178159, guid: 7d9d98d06b89b3742a4fb134283674b9, type: 3}
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  attackTime: 0.25
+  attackOffset: 0.5
+  attackDistance: 0.5
+  projectileCount:
+    value: 1
+    upgrades: 0000000001000000
+    projectilesPer: 1
+  damage:
+    value: 30
+    upgrades:
+    - 0.33
+    - 0.15
+    - 0.1
+    - 0.1
+    - 0.1
+  knockback:
+    value: 1
+    upgrades: []
+  cooldown:
+    value: 1
+    upgrades:
+    - 0.1
+    - 0.1
+    - 0.1
+    - 0.1
+    - 0.1
+  aoe:
+    value: 0.4
+    upgrades:
+    - 0
+    - 0
+    - 0.05
+    - 0.1

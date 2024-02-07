@@ -48,7 +48,7 @@ public class ThrowableAbility : Ability
         protected virtual void LaunchThrowable()
         {
             Throwable throwable = entityManager.SpawnThrowable(throwableIndex, player.CenterTransform.position, damage.Value, knockback.Value, 0, monsterLayer);
-            throwable.Throw((Vector2)player.transform.position + Random.insideUnitCircle * throwRadius);
+            throwable.Throw((Vector2)player.CenterTransform.position + Random.insideUnitCircle * throwRadius);
             throwable.OnHitDamageable.AddListener(player.OnDealDamage.Invoke);
         }
     }

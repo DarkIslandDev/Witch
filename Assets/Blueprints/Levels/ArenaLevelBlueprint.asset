@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2de2150e92f41f9a5d3e3bad04c1db9, type: 3}
   m_Name: ArenaLevelBlueprint
   m_EditorClassIdentifier: 
-  levelTime: 1800
+  levelTime: 30
   abilityPrefabs:
   - {fileID: 5182514296199598483, guid: ee8e4bedf93fb864dbdc6820c45105b9, type: 3}
   - {fileID: 7216638237929375765, guid: 6a77379f5b01f71408d0abcbca69866e, type: 3}
@@ -20,17 +20,30 @@ MonoBehaviour:
   - {fileID: 4262225541110306086, guid: 316818af3d052b844ac459dcd401cd38, type: 3}
   - {fileID: 57415258860292038, guid: 90775f736cedc3344ad28fa3601ac9ba, type: 3}
   - {fileID: 2967615534482393073, guid: fed551309e1c4b540a46fc24ad75ecc2, type: 3}
+  - {fileID: 6704117991480300381, guid: f67785eed0fedb949aa8b6d783e75865, type: 3}
+  - {fileID: 4580546126345550552, guid: 7ab93263aa46fae48b19dd27f02f8e51, type: 3}
   - {fileID: 2392811166943901461, guid: 680d48e06ea1f2444bb0770ff96c9616, type: 3}
   - {fileID: 4556178690787835967, guid: 1c3d4d2d9d7d8d940948fe202742cf70, type: 3}
   - {fileID: 2190983966540786879, guid: fad1a5402b970754fb957e43da277e29, type: 3}
   - {fileID: 2434721232302730595, guid: 3ef3558b1029efb438b310c877ffdf44, type: 3}
-  - {fileID: 8838068065842741410, guid: 38365dac0601099418dcae2de87ac463, type: 3}
-  - {fileID: 5437659858776114899, guid: cd93e7e04147c9a4fbe2a7505e1372bd, type: 3}
   - {fileID: 4667053934757091315, guid: d6aa012d4b43c71498f49b9f04fa9e2b, type: 3}
+  - {fileID: 592601063223550666, guid: f14ab172517e53a4786f16833a0e8c28, type: 3}
   monsters:
   - monsterPrefab: {fileID: 3440157682486000379, guid: 85deda36146cc0f41aca9b03bc751182, type: 3}
     monsterBlueprints:
     - {fileID: 11400000, guid: eb95b34759a83bc4ba7669f9ea03db8d, type: 2}
+    - {fileID: 11400000, guid: eb95b34759a83bc4ba7669f9ea03db8d, type: 2}
+  - monsterPrefab: {fileID: 2175403374619031094, guid: 895da454d1e908f4d84e89110acf3d2b, type: 3}
+    monsterBlueprints:
+    - {fileID: 11400000, guid: affe8d644ecc85a4783a7e167970e4de, type: 2}
+    - {fileID: 11400000, guid: affe8d644ecc85a4783a7e167970e4de, type: 2}
+  miniBosses:
+  - bossPrefab: {fileID: 4285419009961221335, guid: 5cb9509061b2e104c9d174153604d785, type: 3}
+    bossBlueprint: {fileID: 11400000, guid: 7a4a77ffdd714b34eb994e50d92d917c, type: 2}
+    spawnTime: 5
+  finalBoss:
+    bossPrefab: {fileID: 8878763637736157162, guid: 4cb680af9e076184cb242c46f6180160, type: 3}
+    bossBlueprint: {fileID: 11400000, guid: 7a4a77ffdd714b34eb994e50d92d917c, type: 2}
   monsterSpawnTable:
     spawnRateKeyframes:
     - t: 0

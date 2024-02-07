@@ -5127,7 +5127,6 @@ MonoBehaviour:
   initialRotationSpeed: 3
   holyWater: {fileID: 1044966707364205082}
   waterExplosion: {fileID: 1418766176554927228}
-  dissolveRenderer: {fileID: 434862939232864201}
 --- !u!1 &6001245931438160783
 GameObject:
   m_ObjectHideFlags: 0
@@ -10016,7 +10015,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 82853076f69742049b52c16712d315c2, type: 2}
+  - {fileID: 2100000, guid: 537024cdddc80a84f98381ab6a111425, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10034,11 +10033,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -3481629
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3d33b445c0154a846adf70357488b925, type: 3}
-  m_Color: {r: 0.011764706, g: 0.42646176, b: 0.7529412, a: 0}
+  m_Color: {r: 0.66042185, g: 0.803254, b: 0.9150943, a: 0.6039216}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -10061,3 +10060,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterParticles: {fileID: 1479170013960256790}
+  spriteRenderer: {fileID: 434862939232864201}

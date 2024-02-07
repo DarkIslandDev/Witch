@@ -29,7 +29,7 @@ public class CrossAbility : Ability
     private void Update()
     {
         timeSinceLastAttack += Time.deltaTime;
-
+        
         if (timeSinceLastAttack >= cooldown.Value)
         {
             timeSinceLastAttack = Mathf.Repeat(timeSinceLastAttack, cooldown.Value);
@@ -61,10 +61,10 @@ public class CrossAbility : Ability
         }
         else
         {
-            throwPosition = (Vector2)player.transform.position + Random.insideUnitCircle.normalized * throwRadius;
+            throwPosition = (Vector2)player.CenterTransform.position + Random.insideUnitCircle.normalized * throwRadius;
         }
         
-        boomerang.Throw(player.transform, throwPosition);
+        boomerang.Throw(player.CenterTransform, throwPosition);
         boomerang.OnHitDamageable.AddListener(player.OnDealDamage.Invoke);
         
     }

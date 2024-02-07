@@ -13,6 +13,8 @@ public class LevelBlueprint : ScriptableObject
 
     [Header("Настройки монстров")] 
     public MonsterContainer[] monsters;
+    public MiniBossContainer[] miniBosses;
+    public BossContainer finalBoss;
     public MonsterSpawnTable monsterSpawnTable;
     [Header("Chest settings")] 
     public ChestBlueprint chestBlueprint;
@@ -48,4 +50,17 @@ public class MonsterContainer
 {
     public GameObject monsterPrefab;
     public MonsterBlueprint[] monsterBlueprints;
+}
+
+[Serializable]
+public class MiniBossContainer : BossContainer
+{
+    public float spawnTime;
+}
+
+[Serializable]
+public class BossContainer
+{
+    public GameObject bossPrefab;
+    public BossMonsterBlueprint bossBlueprint;
 }

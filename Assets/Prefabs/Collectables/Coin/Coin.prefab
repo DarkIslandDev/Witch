@@ -69,7 +69,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.4
 --- !u!114 &-8160079455303863023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +139,8 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -160,8 +162,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -482243861
-  m_SortingLayer: 2
+  m_SortingLayerID: -1250833563
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 830399909, guid: 816710af269059047a690b7cd2e3e2d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

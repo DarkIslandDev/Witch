@@ -14,7 +14,7 @@ public enum Rarity
 
 public abstract class Ability : MonoBehaviour
 {
-    [Header("Детали Абилки")] 
+    [Header("Ability details")]
     [SerializeField] protected Sprite abilityImage;
     [SerializeField] protected string abilityName;
     [TextArea(5, 5)] [SerializeField] protected string abilityDescription;
@@ -26,7 +26,7 @@ public abstract class Ability : MonoBehaviour
     protected EntityManager entityManager;
     protected Player player;
     
-    public List<IUpgradeableValue> upgradeableValues;
+    protected List<IUpgradeableValue> upgradeableValues;
 
     protected int level = 0;
     protected int maxLevel;

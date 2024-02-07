@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
-[System.Serializable]
+[Serializable]
 public class MonsterSpawnTable
 {
     public SpawnRateKeyframe[] spawnRateKeyframes;
@@ -92,21 +94,21 @@ public class MonsterSpawnTable
         return (t - min) / (max - min);
     }
 
-    [System.Serializable]
+    [Serializable]
     public class SpawnRateKeyframe
     {
         public float t;
         public float spawnRate;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class SpawnChanceKeyframe
     {
         public float t;
         public float[] spawnChances;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class HPMultiplierKeyframe
     {
         public float t;

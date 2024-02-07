@@ -14,8 +14,11 @@ public class StabAbility : MeleeAbility
     protected override void Use()
     {
         base.Use();
-        weaponSize = weaponSpriteRenderer.bounds.size;
-        weaponSpriteRenderer.enabled = false;
+        if (weaponSpriteRenderer != null)
+        {
+            weaponSize = weaponSpriteRenderer.bounds.size;
+            weaponSpriteRenderer.enabled = false;
+        }
     }
 
     protected override void Attack()
@@ -33,7 +36,7 @@ public class StabAbility : MeleeAbility
         while (t < stabTime)
         {
             Vector2 attackBoxPosition =
-                (Vector2)player.transform.position +
+                (Vector2)player.CenterTransform.position +
                 dir * (weaponSize.x / 2 + stabOffset + stabDistance / stabTime * t);
             float attackAngle = Vector2.SignedAngle(Vector2.right, dir);
             Collider2D[] hitColliders =
@@ -42,12 +45,12 @@ public class StabAbility : MeleeAbility
             weaponSpriteRenderer.transform.position = attackBoxPosition;
             weaponSpriteRenderer.transform.localRotation = Quaternion.Euler(0, 0, attackAngle);
 
-            foreach (Collider2D collider in hitColliders)
+            foreach (Collider2D col in hitColliders)
             {
-                if (!hitMonsters.Contains(collider.gameObject))
+                if (!hitMonsters.Contains(col.gameObject))
                 {
-                    hitMonsters.Add(collider.gameObject);
-                    Monster monster = collider.gameObject.GetComponentInParent<Monster>();
+                    hitMonsters.Add(col.gameObject);
+                    Monster monster = col.gameObject.GetComponentInParent<Monster>();
                     DamageMonster(monster, damage.Value, dir * knockback.Value);
                     player.OnDealDamage?.Invoke(damage.Value);
                 }
@@ -63,7 +66,7 @@ public class StabAbility : MeleeAbility
         while (t < 1)
         {
             weaponSpriteRenderer.transform.localPosition =
-                (Vector2)player.transform.position +
+                (Vector2)player.CenterTransform.position +
                 dir * (weaponSpriteRenderer.transform.localScale.x /
                        initialScale.x * weaponSize.x / 2 + stabOffset +
                        stabDistance);

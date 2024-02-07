@@ -8,7 +8,9 @@ public class SpeedPotion : Collectable
     
     protected override void OnCollected()
     {
-        player.UpdateMoveSpeed();
+        player.StartCoroutine(player.ChangeMoveSpeed(collectableType.cooldown));
+        Debug.Log(collectableType.cooldown);
+        // player.IncreaseMovementSpeed();
         Destroy(gameObject);
     }
 }

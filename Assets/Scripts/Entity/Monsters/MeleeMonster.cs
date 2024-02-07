@@ -24,7 +24,7 @@ public class MeleeMonster : Monster
         base.FixedUpdate();
 
         Vector2 moveDirection = (player.transform.position - transform.position).normalized;
-        rigidbody.velocity += moveDirection * monsterBlueprint.acceleration * Time.deltaTime;
+        rigidbody.velocity += moveDirection * (monsterBlueprint.acceleration * Time.deltaTime);
     }
 
     private void OnCollisionStay2D(Collision2D other)

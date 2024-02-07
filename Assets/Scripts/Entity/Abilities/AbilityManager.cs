@@ -27,6 +27,7 @@ public class AbilityManager : MonoBehaviour
     public int BleedRateUpgradeablesCount { get; set; } = 0;
     public int BleedDurationUpgradeablesCount { get; set; } = 0;
     public int HealthUpgradeablesCount { get; set; } = 0;
+    public int CollectionRadiusUpgradeablesCount { get; set; } = 0;
     public int MovementSpeedUpgradeablesCount { get; set; } = 0;
     public int ArmorUpgradeablesCount { get; set; } = 0;
     public int FireRateUpgradeablesCount { get; set; } = 0;
@@ -66,6 +67,11 @@ public class AbilityManager : MonoBehaviour
         {
             ability.Init(abilityManager, entityManager, player);
             newAbilities.Add(ability);
+        }
+
+        foreach (Ability newAbility in newAbilities)
+        {
+            newAbility.gameObject.SetActive(false);
         }
     }
 
@@ -150,15 +156,18 @@ public class AbilityManager : MonoBehaviour
 
     public void ReturnAbilities(List<Ability> abilities)
     {
-        foreach (Ability ability in abilities)
+        if (abilities != null)
         {
-            if (ability.Owned)
+            foreach (Ability ability in abilities)
             {
-                ownedAbilities.Add(ability);
-            }
-            else
-            {
-                newAbilities.Add(ability);
+                if (ability.Owned)
+                {
+                    ownedAbilities.Add(ability);
+                }
+                else
+                {
+                    newAbilities.Add(ability);
+                }
             }
         }
     }

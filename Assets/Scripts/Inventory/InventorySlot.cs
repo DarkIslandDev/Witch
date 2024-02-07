@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class InventorySlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI countText;
     [SerializeField] private Image itemImage;
     [SerializeField] private Transform itemUseCooldownTransform;
+    [SerializeField] private TextMeshProUGUI itemUseCooldownText;
     [SerializeField] private float itemUseCooldownTimer = 3;
     private float timer;
     
@@ -58,7 +60,8 @@ public class InventorySlot : MonoBehaviour
         items[0].Use();
         items.RemoveAt(0);
         Cooldown();
-        timer = itemUseCooldownTimer;
+        
+        timer = CollectableType.cooldown;
 
         if (items.Count != 0) return;
         countText.text = string.Empty;
@@ -72,10 +75,10 @@ public class InventorySlot : MonoBehaviour
         countText.text = items.Count == 0 ? string.Empty : items.Count.ToString();
         
         float state = timer;
-        state /= itemUseCooldownTimer;
+        state /= CollectableType.cooldown;
 
         if (state < 0) state = 0;
-
+        
         itemUseCooldownTransform.localScale = new Vector3(state, state, 1);
     }
 }

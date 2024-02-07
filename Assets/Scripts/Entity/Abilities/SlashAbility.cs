@@ -40,7 +40,7 @@ public class SlashAbility : MeleeAbility
                     initialDir.x * Mathf.Cos(Mathf.Deg2Rad * theta) - initialDir.y * Mathf.Sin(Mathf.Deg2Rad * theta),
                     initialDir.x * Mathf.Sin(Mathf.Deg2Rad * theta) + initialDir.y * Mathf.Cos(Mathf.Deg2Rad * theta)
                 );
-                Vector2 attackBoxPosition = (Vector2)player.transform.position + dir * (scaleMultiplier*weaponSize.x/2 + slashOffset);
+                Vector2 attackBoxPosition = (Vector2)player.CenterTransform.position + dir * (scaleMultiplier*weaponSize.x/2 + slashOffset);
                 Collider2D[] hitColliders = Physics2D.OverlapBoxAll(attackBoxPosition, scaleMultiplier*weaponSize, Vector2.SignedAngle(Vector2.right, dir), targetLayer);
                 
                 weaponSpriteRenderer.transform.position = attackBoxPosition;

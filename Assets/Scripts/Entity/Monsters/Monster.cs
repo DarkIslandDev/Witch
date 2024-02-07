@@ -38,6 +38,7 @@ public class Monster : IDamageable
         monsterAnimator = GetComponentInChildren<MonsterAnimator>();
         monsterSpriteRenderer = GetComponentInChildren<SpriteRenderer>();
         zPositioner = gameObject.AddComponent<ZPositioner>();
+        
         monsterHitBox = monsterSpriteRenderer.gameObject.AddComponent<BoxCollider2D>();
         monsterHitBox.isTrigger = true;
     }
@@ -55,25 +56,32 @@ public class Monster : IDamageable
         this.monsterBlueprint = monsterBlueprint;
         rigidbody.position = position;
         transform.position = position;
+        
+        monsterSpriteRenderer.sharedMaterial = defaultMaterial;
+        shadow.SetActive(true);
 
         currentHealth = monsterBlueprint.hp + hpBuff;
         alive = true;
-        
+
         entityManager.LivingMonsters.Add(this);
-        
+
         monsterHitBox.enabled = true;
         monsterHitBox.size = monsterSpriteRenderer.bounds.size;
         monsterHitBox.offset = Vector2.up * monsterHitBox.size.y / 2;
         monsterLegsCollider.radius = monsterHitBox.size.x / 2.5f;
-        centerTransform = (new GameObject("Center Transform")).transform;
-        centerTransform.SetParent(transform);
-        centerTransform.position = transform.position + (Vector3)monsterHitBox.offset;
+        
+        if (centerTransform == null)
+        {
+            centerTransform = (new GameObject("Center Transform")).transform;
+            centerTransform.SetParent(transform);
+            centerTransform.position = transform.position + (Vector3)monsterHitBox.offset;
+        }
 
         float spd = Random.Range(monsterBlueprint.moveSpeed - 0.1f, monsterBlueprint.moveSpeed + 0.1f);
         rigidbody.drag = monsterBlueprint.acceleration / (spd * spd);
 
         rigidbody.velocity = Vector2.zero;
-        
+
         StopAllCoroutines();
     }
 
@@ -90,8 +98,8 @@ public class Monster : IDamageable
         {
             entityManager.SpawnDamageText(monsterHitBox.transform.position, damage, false);
             currentHealth -= damage;
-            
-            if(hitAnimationCoroutine != null) StopCoroutine(hitAnimationCoroutine);
+
+            if (hitAnimationCoroutine != null) StopCoroutine(hitAnimationCoroutine);
 
             if (knockBack != default)
             {
@@ -113,9 +121,9 @@ public class Monster : IDamageable
     protected IEnumerator HitAnimation()
     {
         monsterSpriteRenderer.sharedMaterial = hitMaterial;
-        
+
         yield return new WaitForSeconds(0.15f);
-        
+
         monsterSpriteRenderer.sharedMaterial = defaultMaterial;
         knockedBack = false;
     }
@@ -124,26 +132,29 @@ public class Monster : IDamageable
     {
         alive = false;
         monsterHitBox.enabled = false;
-        
+
         entityManager.LivingMonsters.Remove(this);
 
         if (killedByPlayer) DropLoot();
-
-        if (deathParticles != null) deathParticles.Play();
-
+        
         yield return HitAnimation();
-
-        if (deathParticles != null)
+        
+        deathParticles?.Play();
+        
+        monsterSpriteRenderer.material = deathMaterial;
+        
+        float t = 1;
+        while (t > 0)
         {
-            monsterSpriteRenderer.enabled = false;
+            monsterSpriteRenderer.material.SetFloat("_Dissolve", t);
+            t -= Time.deltaTime / 2;
             shadow.SetActive(false);
             
-            yield return new WaitForSeconds(deathParticles.main.duration - 0.15f);
-
-            monsterSpriteRenderer.enabled = true;
-            shadow.SetActive(true);
+            if(t == 0) yield return null;
         }
         
+        yield return new WaitForSeconds(0.2f);
+
         OnKilled?.Invoke(this);
         OnKilled?.RemoveAllListeners();
         entityManager.DespawnMonster(monsterIndex, this, true);

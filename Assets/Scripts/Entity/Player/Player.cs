@@ -19,9 +19,8 @@ public class Player : IDamageable
 
     protected Collider2D playerHitBox;
     [SerializeField] protected Transform centerTransform;
-    [SerializeField] protected Collider2D collectableCollider;
+    [SerializeField] protected CircleCollider2D collectableCollider;
     [SerializeField] protected Collider2D boomerangCollider;
-    [SerializeField] protected CircleCollider2D saltCircleCollider;
     [SerializeField] protected Collider2D meleeHitBoxCollider;
     [SerializeField] protected ParticleSystem dustParticles;
     [SerializeField] protected ParticleSystem deathParticles;
@@ -29,6 +28,7 @@ public class Player : IDamageable
     [SerializeField] protected Material defaultMaterial;
     [SerializeField] protected Material hitMaterial;
     [SerializeField] protected Material deathMaterial;
+    [SerializeField] protected GameObject shadow;
     public SpriteRenderer spriteRenderer;
 
     [SerializeField] protected CharacterBlueprint playerBlueprint;
@@ -37,31 +37,36 @@ public class Player : IDamageable
     protected UpgradeableArmor armor;
 
     protected bool alive = true;
+    protected bool canRevive = true;
     protected bool godMode = false;
+    
     protected int currentLevel = 1;
     protected float currentExpirience = 0;
     protected float nextLevelExpirience = 5;
     public float expirienceToNextLevel = 5;
+    
     protected float currentHealth;
     protected float maxHealth;
+    protected float bonusHealth => playerBlueprint.bonusHP;
     protected Vector2 lookDirection => inputManager.movementInput;
     protected CoroutineQueue coroutineQueue;
     protected Coroutine hitAnimationCoroutine = null;
 
     public UnityEvent<float> OnDealDamage { get; } = new UnityEvent<float>();
     public UnityEvent OnDeath { get; } = new UnityEvent();
-
+    
     public Transform CenterTransform => centerTransform;
-    public Collider2D CollectableCollider => collectableCollider;
+    public CircleCollider2D CollectableCollider => collectableCollider;
     public Collider2D BoomerangCollider => boomerangCollider;
-    public CircleCollider2D SaltCircleCollider => saltCircleCollider;
     public CharacterBlueprint PlayerBlueprint => playerBlueprint;
     public int CurrentLevel => currentLevel;
     public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    public float BonusHealth => bonusHealth;
     public float Luck => playerBlueprint.luck;
     public bool IsLeft => playerAnimator.isLeft;
     public Vector2 LookDirection => lookDirection;
     public Vector2 Velocity => playerMovement.rigidbody.velocity;
+    public bool CanRevive => canRevive;
 
     private void Update()
     {
@@ -84,7 +89,6 @@ public class Player : IDamageable
         inputManager.bInput = false;
         inputManager.aInput = false;
         inputManager.yInput = false;
-        
         inputManager.startInput = false;
     }
 
@@ -104,6 +108,8 @@ public class Player : IDamageable
         playerAnimator = GetComponentInChildren<PlayerAnimator>();
         playerHitBox = spriteRenderer.gameObject.AddComponent<BoxCollider2D>();
         playerHitBox.isTrigger = true;
+
+        centerTransform.position = transform.position + new Vector3(0, 0.5f, 0);
         
         playerInventory.Init();
 
@@ -123,20 +129,29 @@ public class Player : IDamageable
         playerUI.levelBar.Setup(currentExpirience, 0, nextLevelExpirience, true);
         UpdateLevelDisplay();
 
+        health = new UpgradeableHealth()
+        {
+            Value = playerBlueprint.hp
+        };
+        abilityManager.RegisterUpgradeableValue(health, true);
+        
         movementSpeed = new UpgradeableMovementSpeed
         {
             Value = playerBlueprint.moveSpeed
         };
-
         abilityManager.RegisterUpgradeableValue(movementSpeed, true);
-        UpdateMoveSpeed();
+        IncreaseMovementSpeed();
+        
         armor = new UpgradeableArmor
         {
             Value = playerBlueprint.armor
         };
-
         abilityManager.RegisterUpgradeableValue(armor, true);
 
+        shadow.transform.localScale = new Vector3(spriteRenderer.bounds.size.x, shadow.transform.localScale.y,
+            shadow.transform.localScale.z);
+        shadow.SetActive(true);
+        
         zPositioner.Init(transform);
     }
 
@@ -165,7 +180,7 @@ public class Player : IDamageable
             }
 
             currentExpirience += exp;
-            playerUI.levelBar.AddPoints(exp);
+            playerUI.levelBar.AddCurrentPoints(exp);
         }
     }
 
@@ -192,7 +207,7 @@ public class Player : IDamageable
         if (alive) playerMovement.rigidbody.velocity += knockBack * Mathf.Sqrt(playerMovement.rigidbody.drag);
     }
 
-    public override void TakeDamage(float damage, Vector2 knockBack = default(Vector2))
+    public override void TakeDamage(float damage, Vector2 knockBack = default)
     {
         if (!godMode)
         {
@@ -242,7 +257,8 @@ public class Player : IDamageable
         alive = false;
         spriteRenderer.sharedMaterial = defaultMaterial;
 
-        abilityManager.DestroyActiveAbilities();
+        if (!canRevive) abilityManager.DestroyActiveAbilities();
+        
         deathParticles.Play();
         float height = spriteRenderer.bounds.size.y;
         float t = 0;
@@ -265,20 +281,49 @@ public class Player : IDamageable
         deathParticles.Stop();
     }
 
+    public void Revive()
+    {
+        alive = true;
+        spriteRenderer.sharedMaterial = defaultMaterial;
+        spriteRenderer.enabled = true;
+        
+        currentHealth = maxHealth / 2;
+        playerUI.healthBar.AddCurrentPoints(currentHealth);
+        
+        canRevive = false;
+    }
+
     public void GainHealth(float health)
     {
-        playerUI.healthBar.AddPoints(health);
+        playerUI.healthBar.AddCurrentPoints(health);
         currentHealth += health;
 
         if (currentHealth >= maxHealth) currentHealth = maxHealth;
     }
 
-    public void UpdateMoveSpeed() => playerMovement.rigidbody.drag =
-        playerBlueprint.acceleration / (movementSpeed.Value * movementSpeed.Value);
+    public void GainMaxHealth(float maxHealth)
+    {
+        playerUI.healthBar.AddMaxPoints(maxHealth);
+        this.maxHealth = maxHealth;
+    }
+
+    public void IncreaseMovementSpeed()
+    {
+        playerMovement.rigidbody.drag = playerBlueprint.acceleration / (movementSpeed.Value * movementSpeed.Value);
+    }
+
+    public IEnumerator ChangeMoveSpeed(float cooldown)
+    {
+        movementSpeed.Value *= 2;
+
+        yield return new WaitForSeconds(cooldown);
+
+        movementSpeed.Value /= 2;
+    }
 
     public void TakeGodMode(float amount)
     {
-        StopCoroutine(GodMode(amount));
+        StopCoroutine(GodMode(0));
         StartCoroutine(GodMode(amount));
     }
 

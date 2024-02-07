@@ -88,4 +88,5 @@ MonoBehaviour:
   juiciness: 3
   lerpTime: 0.6
   magnetic: 1
+  cooldown: 3
   healAmount: 50

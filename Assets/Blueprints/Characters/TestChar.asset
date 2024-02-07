@@ -17,6 +17,7 @@ MonoBehaviour:
   owned: 1
   cost: 999
   hp: 100
+  bonusHP: 0
   atk: 30
   recovery: 0
   armor: 0
@@ -26,4 +27,4 @@ MonoBehaviour:
   acceleration: 50
   playerGFXPrefab: {fileID: 8364934282410544769, guid: 8d7bf7f5cfb019c40921c44753823ab5, type: 3}
   startingAbilities:
-  - {fileID: 4667053934757091315, guid: d6aa012d4b43c71498f49b9f04fa9e2b, type: 3}
+  - {fileID: 4556178690787835967, guid: 1c3d4d2d9d7d8d940948fe202742cf70, type: 3}

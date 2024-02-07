@@ -31,8 +31,11 @@ public abstract class Collectable : MonoBehaviour
     protected new Collider2D collider;
     protected bool beingCollected;
 
+    private new Camera camera;
+
     protected virtual void Awake()
     {
+        camera = Camera.main;
         collider = GetComponent<Collider2D>();
         zPositioner = gameObject.AddComponent<ZPositioner>();
     }
@@ -146,11 +149,11 @@ public abstract class Collectable : MonoBehaviour
             if(lerpT >= 1) break;
 
             transform.position = Vector3.LerpUnclamped(pickupPos,
-                Camera.main.ScreenToWorldPoint(inventorySlot.transform.position), lerpT);
+                camera.ScreenToWorldPoint(inventorySlot.transform.position), lerpT);
             yield return null;
         }
 
-        transform.position = Camera.main.ScreenToWorldPoint(inventorySlot.transform.position);
+        transform.position = camera.ScreenToWorldPoint(inventorySlot.transform.position);
         yield return null;
         gameObject.SetActive(false);
         inventorySlot.FinalizeAddItemBeingCollected(this);
@@ -166,7 +169,7 @@ public abstract class Collectable : MonoBehaviour
         while (!beingCollected && t < 1)
         {
             transform.position = spawnPosition + Vector3.up * EasingUtils.Bounce(t, saHeight) +
-                                 Vector3.right * horizontalSpeed * t;
+                                 Vector3.right * (horizontalSpeed * t);
 
             t += Time.deltaTime * saSpeed;
             yield return null;
@@ -185,7 +188,7 @@ public abstract class Collectable : MonoBehaviour
         {
             zPositioner.enabled = false;
             transform.position = spawnPosition + Vector3.up * EasingUtils.Bounce(t, saHeight) +
-                                 Vector3.right * horizontalSpeed * t;
+                                 Vector3.right * (horizontalSpeed * t);
 
             t += Time.deltaTime * saSpeed;
             yield return null;

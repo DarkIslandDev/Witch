@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DissolveMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 68e13b3f0a92194429eaa7dec925faac, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 10848679165c3aa49b77ccbdf4b269d6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 3d33b445c0154a846adf70357488b925, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
@@ -62,10 +62,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DissolveAmount: 0.5
+    - _Bits: 64
+    - _Dissolve: 0.004733576
+    - _DissolveAmount: 0.7753748
+    - _DissolveRotation: 90
     - _DissolveScale: 30
     - _DissolveWidth: 1
     - _EnableExternalAlpha: 0
+    - _NoiseScale: 25
+    - _PixelAmount: 32
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Transparency: 1
@@ -73,6 +78,8 @@ Material:
     - _Color: {r: 0.011764706, g: 0.42646176, b: 0.7529412, a: 1}
     - _DissolveColor: {r: 5.992157, g: 0.7584731, b: 0, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Vector3: {r: 0, g: 0, b: 1, a: 0}
+    - _Wind: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2602213343446313628

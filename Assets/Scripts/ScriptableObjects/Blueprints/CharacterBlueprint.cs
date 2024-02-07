@@ -9,6 +9,7 @@ public class CharacterBlueprint : ScriptableObject
     public bool owned = false;
     public int cost;
     public float hp;
+    public float bonusHP;
     public float atk;
     public float recovery;
     public int armor;
