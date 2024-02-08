@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      flasks_2_3_0: 4982633183505097980
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

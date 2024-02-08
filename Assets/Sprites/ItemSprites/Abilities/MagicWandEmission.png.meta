@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MagicWandEmission_0: 5958356235546775193
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

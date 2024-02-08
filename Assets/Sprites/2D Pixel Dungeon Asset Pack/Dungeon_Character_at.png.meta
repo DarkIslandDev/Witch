@@ -130,7 +130,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Dungeon_Character_at_0: -7502629866230024736
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
