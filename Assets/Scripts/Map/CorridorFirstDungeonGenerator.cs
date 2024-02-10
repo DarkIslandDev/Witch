@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
@@ -9,6 +10,10 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] protected int corridorCount = 5;
     [SerializeField] [Range(0.1f, 1f)] protected float roomPercent = 0.8f;
 
+    private Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
+
+    private HashSet<Vector2Int> floorPositions, corridorPositions;
+    
     protected override void RunProceduralGeneration()
     {
         CorridorFirstDungeonGeneration();
@@ -16,10 +21,11 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private void CorridorFirstDungeonGeneration()
     {
-        HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>();
+        floorPositions = new HashSet<Vector2Int>();
         HashSet<Vector2Int> potentialRoomPositions = new HashSet<Vector2Int>();
 
-        List<List<Vector2Int>> corridors = CreateCorridors(floorPositions, potentialRoomPositions);
+        List<List<Vector2Int>> corridors = new List<List<Vector2Int>>();
+        CreateCorridors(floorPositions, potentialRoomPositions);
 
         HashSet<Vector2Int> roomPositions = CreateRooms(potentialRoomPositions);
 
@@ -28,11 +34,19 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
         CreateRoomAtDeadEnd(deadEnds, roomPositions);
 
         floorPositions.UnionWith(roomPositions);
-
+        
+        int randomCorridor = Random.Range(0, 1);
+        Debug.Log(randomCorridor);
         for (int i = 0; i < corridors.Count; i++)
         {
-            // corridors[i] = IncreaseCorridorSizeByOne(corridors[i]);
-            corridors[i] = IncreaseCorridorBrush3By3(corridors[i]);
+            corridors[i] = randomCorridor switch
+            {
+                0 => IncreaseCorridorSizeByOne(corridors[i]),
+                1 => IncreaseCorridorBrush3By3(corridors[i]),
+                _ => corridors[i]
+            };
+
+            
             floorPositions.UnionWith(corridors[i]);
         }
 
@@ -78,35 +92,47 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         List<Vector2Int> roomsToCreate =
             potentialRoomPositions.OrderBy(x => Guid.NewGuid()).Take(roomToCreateCount).ToList();
-
-        for (int i = 0; i < roomsToCreate.Count; i++)
+        ClearRoomData();
+        
+        foreach (Vector2Int roomPosition in roomsToCreate)
         {
-            Vector2Int roomPosition = roomsToCreate[i];
             HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomPosition);
+
+            SaveRoomData(roomPosition, roomFloor);
             roomPositions.UnionWith(roomFloor);
         }
 
         return roomPositions;
     }
 
-    private List<List<Vector2Int>> CreateCorridors(HashSet<Vector2Int> floorPositions,
+    private void SaveRoomData(Vector2Int roomPosition, HashSet<Vector2Int> roomFloor)
+    {
+        roomsDictionary[roomPosition] = roomFloor;
+        // roomColors.Add(UnityEngine.Random.ColorHSV());
+    }
+
+    private void ClearRoomData()
+    {
+        roomsDictionary.Clear();
+        // roomColors.Clear();
+    }
+
+    private void CreateCorridors(HashSet<Vector2Int> floorPositions,
         HashSet<Vector2Int> potentialRoomPositions)
     {
         Vector2Int currentPosition = startPosition;
         potentialRoomPositions.Add(currentPosition);
-        List<List<Vector2Int>> corridors = new List<List<Vector2Int>>();
-
+        
         for (int i = 0; i < corridorCount; i++)
         {
             List<Vector2Int> corridor =
                 ProceduralGenerationAlgorithms.RandomWalkCorridor(currentPosition, corridorLength);
-            corridors.Add(corridor);
             currentPosition = corridor[corridor.Count - 1];
             potentialRoomPositions.Add(currentPosition);
             floorPositions.UnionWith(corridor);
         }
 
-        return corridors;
+        corridorPositions = new HashSet<Vector2Int>(floorPositions);
     }
 
     public List<Vector2Int> IncreaseCorridorBrush3By3(List<Vector2Int> corridor)

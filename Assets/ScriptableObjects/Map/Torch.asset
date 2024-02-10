@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caecaee502cb40179579adc615603425, type: 3}
-  m_Name: SimpleRandomWalkParameters_BigDungeon
+  m_Script: {fileID: 11500000, guid: da2c5f9c5c624eebb9b0a28c77a89d7e, type: 3}
+  m_Name: Torch
   m_EditorClassIdentifier: 
-  iterations: 50
-  walkLenght: 15
-  startRandomlyEachIteration: 0
+  name: Torch
+  sprite: {fileID: 934877148867342981, guid: d97c7ac92f24e7f4f87eca5aedde90f9, type: 3}
+  size: {x: 2, y: 1}
+  placementType: 0
+  addOffset: 0
+  itemHealth: -1
+  NonDestructible: 1
