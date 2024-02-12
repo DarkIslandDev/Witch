@@ -39,12 +39,12 @@ public class Player : IDamageable
     protected bool alive = true;
     protected bool canRevive = true;
     protected bool godMode = false;
-    
+
     protected int currentLevel = 1;
     protected float currentExpirience = 0;
     protected float nextLevelExpirience = 5;
     public float expirienceToNextLevel = 5;
-    
+
     protected float currentHealth;
     protected float maxHealth;
     protected float bonusHealth => playerBlueprint.bonusHP;
@@ -54,13 +54,19 @@ public class Player : IDamageable
 
     public UnityEvent<float> OnDealDamage { get; } = new UnityEvent<float>();
     public UnityEvent OnDeath { get; } = new UnityEvent();
-    
+
     public Transform CenterTransform => centerTransform;
     public CircleCollider2D CollectableCollider => collectableCollider;
     public Collider2D BoomerangCollider => boomerangCollider;
     public CharacterBlueprint PlayerBlueprint => playerBlueprint;
     public int CurrentLevel => currentLevel;
-    public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
+
+    public float CurrentHealth
+    {
+        get => currentHealth;
+        set => currentHealth = value;
+    }
+
     public float BonusHealth => bonusHealth;
     public float Luck => playerBlueprint.luck;
     public bool IsLeft => playerAnimator.isLeft;
@@ -95,7 +101,7 @@ public class Player : IDamageable
     public void Init(EntityManager entityManager, AbilityManager abilityManager, StatisticManager statisticManager)
     {
         alive = true;
-        
+
         this.entityManager = entityManager;
         this.abilityManager = abilityManager;
         this.statisticManager = statisticManager;
@@ -110,7 +116,7 @@ public class Player : IDamageable
         playerHitBox.isTrigger = true;
 
         centerTransform.position = transform.position + new Vector3(0, 0.5f, 0);
-        
+
         playerInventory.Init();
 
         inputManager.player = this;
@@ -124,7 +130,7 @@ public class Player : IDamageable
         currentHealth = playerBlueprint.hp;
         maxHealth = playerBlueprint.hp;
         playerUI.healthBar.Setup(currentHealth, 0, maxHealth, true);
-        
+
         currentLevel = 1;
         playerUI.levelBar.Setup(currentExpirience, 0, nextLevelExpirience, true);
         UpdateLevelDisplay();
@@ -134,14 +140,14 @@ public class Player : IDamageable
             Value = playerBlueprint.hp
         };
         abilityManager.RegisterUpgradeableValue(health, true);
-        
+
         movementSpeed = new UpgradeableMovementSpeed
         {
             Value = playerBlueprint.moveSpeed
         };
         abilityManager.RegisterUpgradeableValue(movementSpeed, true);
         IncreaseMovementSpeed();
-        
+
         armor = new UpgradeableArmor
         {
             Value = playerBlueprint.armor
@@ -151,7 +157,7 @@ public class Player : IDamageable
         shadow.transform.localScale = new Vector3(spriteRenderer.bounds.size.x, shadow.transform.localScale.y,
             shadow.transform.localScale.z);
         shadow.SetActive(true);
-        
+
         zPositioner.Init(transform);
     }
 
@@ -258,7 +264,7 @@ public class Player : IDamageable
         spriteRenderer.sharedMaterial = defaultMaterial;
 
         if (!canRevive) abilityManager.DestroyActiveAbilities();
-        
+
         deathParticles.Play();
         float height = spriteRenderer.bounds.size.y;
         float t = 0;
@@ -286,10 +292,10 @@ public class Player : IDamageable
         alive = true;
         spriteRenderer.sharedMaterial = defaultMaterial;
         spriteRenderer.enabled = true;
-        
+
         currentHealth = maxHealth / 2;
         playerUI.healthBar.AddCurrentPoints(currentHealth);
-        
+
         canRevive = false;
     }
 

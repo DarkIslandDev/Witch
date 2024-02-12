@@ -1,9 +1,44 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Holds all the data about the room
-/// </summary>
+public class DungeonData : MonoBehaviour
+{
+    [SerializeField] protected GameObject playerReference;
+    [SerializeField] protected List<Room> rooms;
+    [SerializeField] protected HashSet<Vector2Int> path;
+    
+    public List<Room> Rooms => rooms;
+    public HashSet<Vector2Int> Path => path;
+    public GameObject PlayerReference => playerReference;
+    
+    public void Reset()
+    {
+        foreach (Room room in Rooms)
+        {
+            foreach (GameObject item in room.PropObjectReferences)
+            {
+                Destroy(item);
+            }
+            foreach (GameObject item in room.EnemiesInTheRoom)
+            {
+                Destroy(item);
+            }
+        }
+        rooms = new List<Room>();
+        path = new HashSet<Vector2Int>();
+        Destroy(PlayerReference);
+    }
+
+    public IEnumerator ActionCoroutine(Action code)
+    {
+        yield return new WaitForSeconds(1);
+        code();
+    }
+}
+
+[Serializable]
 public class Room
 {
     public Vector2 RoomCenterPos { get; set; }

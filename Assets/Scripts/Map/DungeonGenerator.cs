@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 {
@@ -13,9 +15,23 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] [Range(0, 10)] protected int offset = 1;
     [SerializeField] protected bool randomWalkRooms = false;
 
-    [SerializeField] protected PlayerRoom playerRoom;
-    [SerializeField] protected EnemyRoom enemyRoom;
+    [SerializeField] protected HashSet<Vector2Int> floor;
+    [SerializeField] protected IEnumerable<Vector2Int> corridors;
+    [SerializeField] protected List<BoundsInt> roomsList;
+    [SerializeField] protected List<Vector2Int> roomCenters;
     
+    public HashSet<Vector2Int> Floor => floor;
+    public IEnumerable<Vector2Int> Corridors => corridors;
+    public List<BoundsInt> RoomsList => roomsList;
+    public List<Vector2Int> RoomCenters => roomCenters;
+
+    
+    
+    // [SerializeField] protected PlayerRoom playerRoom;
+    // [SerializeField] protected EnemyRoom enemyRoom;
+
+    private Vector2Int currentPosition;
+
     protected override void RunProceduralGeneration()
     {
         CreateRooms();
@@ -23,43 +39,43 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private void CreateRooms()
     {
-        List<BoundsInt> roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(
+        roomsList = new List<BoundsInt>();
+
+        roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(
             new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth,
             minRoomHeight);
 
-        HashSet<Vector2Int> floor = randomWalkRooms ? CreateRoomsRandomly(roomsList) : CreateSimpleRooms(roomsList);
+        floor = randomWalkRooms ? CreateRoomsRandomly() : CreateSimpleRooms();
 
+        roomCenters = new List<Vector2Int>();
 
-        List<Vector2Int> roomCenters = new List<Vector2Int>();
         foreach (BoundsInt room in roomsList)
         {
             roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(room.center));
         }
 
-        IEnumerable<Vector2Int> corridors = ConnectRooms(roomCenters);
+        corridors = ConnectRooms();
         floor.UnionWith(corridors);
 
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
 
-        ItemPlacementHelper itemPlacementHelper = new ItemPlacementHelper(floor, floor);
-
-        foreach (ItemData item in playerRoom.itemData)
-        {
-            itemPlacementHelper.GetItemPlacementPosition(item.itemData.placementType, randomWalkParameters.iterations, item.itemData.size, false);
-            tilemapVisualizer.PaintItemTiles(floor, item.itemData.sprite);
-        }
+        SpawnPlayer();
     }
 
-    private HashSet<Vector2Int> CreateRoomsRandomly(IReadOnlyList<BoundsInt> roomsList)
+    public void SpawnPlayer() => playerObject.transform.position = (Vector3Int)currentPosition;
+
+    private HashSet<Vector2Int> CreateRoomsRandomly()
     {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
-        for (int i = 0; i < roomsList.Count; i++)
+
+        Vector2Int roomCenter = new Vector2Int();
+        
+        foreach (BoundsInt roomBounds in roomsList)
         {
-            BoundsInt roomBounds = roomsList[i];
-            Vector2Int roomCenter =
-                new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
-            var roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
+            roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
+
+            HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
             foreach (Vector2Int position in roomFloor)
             {
                 if (position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset) &&
@@ -70,10 +86,12 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             }
         }
 
+        currentPosition = roomCenter;
+
         return floor;
     }
 
-    private IEnumerable<Vector2Int> ConnectRooms(List<Vector2Int> roomCenters)
+    private IEnumerable<Vector2Int> ConnectRooms()
     {
         HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
         Vector2Int currentRoomCenter = roomCenters[Random.Range(0, roomCenters.Count)];
@@ -81,7 +99,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         while (roomCenters.Count > 0)
         {
-            Vector2Int closest = FindClosestPointTo(currentRoomCenter, roomCenters);
+            Vector2Int closest = FindClosestPointTo(currentRoomCenter);
             roomCenters.Remove(closest);
             IEnumerable<Vector2Int> newCorridor = CreateCorridor(currentRoomCenter, closest);
             currentRoomCenter = closest;
@@ -96,6 +114,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         HashSet<Vector2Int> corridor = new HashSet<Vector2Int>();
         Vector2Int position = currentRoomCenter;
         corridor.Add(position);
+
         while (position.y != destination.y)
         {
             if (destination.y > position.y)
@@ -127,7 +146,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         return corridor;
     }
 
-    private Vector2Int FindClosestPointTo(Vector2Int currentRoomCenter, List<Vector2Int> roomCenters)
+    private Vector2Int FindClosestPointTo(Vector2Int currentRoomCenter)
     {
         Vector2Int closest = Vector2Int.zero;
         float distance = float.MaxValue;
@@ -144,7 +163,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         return closest;
     }
 
-    private HashSet<Vector2Int> CreateSimpleRooms(List<BoundsInt> roomsList)
+    private HashSet<Vector2Int> CreateSimpleRooms()
     {
         HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         foreach (BoundsInt room in roomsList)

@@ -25,7 +25,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameOverDialog gameOverDialog;
     [SerializeField] private GameTimer gameTimer;
     [SerializeField] private PauseMenu pauseMenu;
+    [SerializeField] protected AbstractDungeonGenerator dungeonGenerator;
 
+    public AbstractDungeonGenerator DungeonGenerator => dungeonGenerator;
+    
     private float levelTime = 0;
     private float timeSinceLastMonsterSpawned;
     private float timeSinceLastChestSpawned;
@@ -43,6 +46,8 @@ public class LevelManager : MonoBehaviour
     {
         this.levelBlueprint = levelBlueprint;
         levelTime = 0;
+        
+        dungeonGenerator.GenerateDungeon();
         
         entityManager.Init(this.levelBlueprint, player, playerInventory, statisticManager, abilitySelectionDialog);
 
@@ -62,6 +67,8 @@ public class LevelManager : MonoBehaviour
         pauseMenu.Close();
         gameOverDialog.Close();
         abilitySelectionDialog.Close();
+        
+
     }
     
     private void Update()
