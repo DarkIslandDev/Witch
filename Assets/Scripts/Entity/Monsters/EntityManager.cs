@@ -4,29 +4,31 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    [Header("Monster spawning settings")]
-    [SerializeField] private float monsterSpawnBufferDistance;
+    [Header("Monster spawning settings")] [SerializeField]
+    private float monsterSpawnBufferDistance;
+
     [SerializeField] private float playerDirectionSpawnWeight;
 
-    [Header("Chest spawning settings")] 
-    [SerializeField] private float chestSpawnRange = 5f;
+    [Header("Chest spawning settings")] [SerializeField]
+    private float chestSpawnRange = 5f;
 
-    [Header("Object pool settings")] 
-    [SerializeField] private GameObject monsterPoolParent;
+    [Header("Object pool settings")] [SerializeField]
+    private GameObject monsterPoolParent;
+
     private MonsterPool[] monsterPools;
-    
+
     [SerializeField] private GameObject projectilePoolParent;
     private List<ProjectilePool> projectilePools;
     private Dictionary<GameObject, int> projectileIndexByPrefab;
-    
+
     [SerializeField] private GameObject throwablePoolParent;
     private List<ThrowablePool> throwablePools;
     private Dictionary<GameObject, int> throwableIndexByPrefab;
-    
+
     [SerializeField] private GameObject boomerangPoolParent;
     private List<BoomerangPool> boomerangPools;
     private Dictionary<GameObject, int> boomerangIndexByPrefab;
-    
+
     [SerializeField] private CoinPool coinPool;
     [SerializeField] private GameObject coinPrefab;
     [SerializeField] private ExpGemPool expGemPool;
@@ -36,9 +38,11 @@ public class EntityManager : MonoBehaviour
     [SerializeField] private DamageTextPool textPool;
     [SerializeField] private GameObject textPrefab;
 
-    [Header("Dependencies")] 
-    [SerializeField] private SpriteRenderer flashSpriteRenderer;
+    [Header("Dependencies")] [SerializeField]
+    private SpriteRenderer flashSpriteRenderer;
+
     [SerializeField] private Camera playerCamera;
+    [SerializeField] protected LevelManager levelManager;
     protected Player player;
     private StatisticManager statisticManager;
     private PlayerInventory playerInventory;
@@ -84,7 +88,6 @@ public class EntityManager : MonoBehaviour
 
         // Инициализация пула монстров для каждого префаба монстров
         monsterPools = new MonsterPool[levelBlueprint.monsters.Length + 1];
-
         for (int i = 0; i < levelBlueprint.monsters.Length; i++)
         {
             monsterPools[i] = monsterPoolParent.AddComponent<MonsterPool>();
@@ -105,7 +108,7 @@ public class EntityManager : MonoBehaviour
         // Инициализируем пул бумерангов для каждого типа бумерангов
         boomerangIndexByPrefab = new Dictionary<GameObject, int>();
         boomerangPools = new List<BoomerangPool>();
-        
+
         // Инициализируем оставшиеся одноразовые пулы объектов
         expGemPool.Init(this, player, expGemPrefab);
         chestPool.Init(this, player, coinPrefab);
@@ -179,22 +182,27 @@ public class EntityManager : MonoBehaviour
     {
         Vector2[] sideDirections = { Vector2.left, Vector2.up, Vector2.right, Vector2.down };
         int sideIndex = Random.Range(0, 4);
-        Vector2 spawnPosition;
-        if (sideIndex % 2 == 0)
-        {
-            spawnPosition = (Vector2)player.transform.position +
-                            sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
-                            Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
-                                screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
-        }
-        else
-        {
-            spawnPosition = (Vector2)player.transform.position +
-                            sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
-                            Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
-                                screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
-        }
+        Vector2 spawnPosition = new Vector2();
+        
+        Vector2 room = levelManager.DungeonGenerator.SpawnPositions[Random.Range(0, levelManager.DungeonGenerator.SpawnPositions.Count)];
 
+        spawnPosition = room;
+        
+        // if (sideIndex % 2 == 0)
+        // {
+        //     spawnPosition = (Vector2)player.transform.position +
+        //                     sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
+        //                     Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
+        //                         screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
+        // }
+        // else
+        // {
+        //     spawnPosition = (Vector2)player.transform.position +
+        //                     sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
+        //                     Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
+        //                         screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
+        // }
+        
         return spawnPosition;
     }
 
@@ -233,26 +241,31 @@ public class EntityManager : MonoBehaviour
         }
 
         Vector2 spawnPosition;
-        if (sideIndex % 2 == 0)
-        {
-            spawnPosition = (Vector2)player.transform.position +
-                            sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
-                            Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
-                                screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
-        }
-        else
-        {
-            spawnPosition = (Vector2)player.transform.position +
-                            sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
-                            Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
-                                screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
-        }
+        // if (sideIndex % 2 == 0)
+        // {
+        //     spawnPosition = (Vector2)player.transform.position +
+        //                     sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
+        //                     Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
+        //                         screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
+        // }
+        // else
+        // {
+        //     spawnPosition = (Vector2)player.transform.position +
+        //                     sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
+        //                     Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
+        //                         screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
+        // }
+        
+        
+        Vector2 room = levelManager.DungeonGenerator.SpawnPositions[Random.Range(0, levelManager.DungeonGenerator.SpawnPositions.Count)];
+
+        spawnPosition = room;
 
         return spawnPosition;
     }
 
     #endregion
-    
+
     #region ExpGem Spawning
 
     public void SpawnGemsAroundPlayer(int gemCount, GemType gemType = GemType.BlueXPGem)
@@ -425,7 +438,8 @@ public class EntityManager : MonoBehaviour
         return boomerang;
     }
 
-    public void DespawnBoomerang(int boomerangIndex, Boomerang boomerang) => boomerangPools[boomerangIndex].Release(boomerang);
+    public void DespawnBoomerang(int boomerangIndex, Boomerang boomerang) =>
+        boomerangPools[boomerangIndex].Release(boomerang);
 
     public int AddPoolForBoomerang(GameObject boomerangPrefab)
     {

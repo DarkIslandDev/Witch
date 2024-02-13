@@ -16,19 +16,16 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] protected bool randomWalkRooms = false;
 
     [SerializeField] protected HashSet<Vector2Int> floor;
-    [SerializeField] protected IEnumerable<Vector2Int> corridors;
+    [SerializeField] protected HashSet<Vector2Int> corridors;
     [SerializeField] protected List<BoundsInt> roomsList;
     [SerializeField] protected List<Vector2Int> roomCenters;
-    
+    [SerializeField] protected List<Vector2Int> spawnPositions;
+
     public HashSet<Vector2Int> Floor => floor;
-    public IEnumerable<Vector2Int> Corridors => corridors;
+    public HashSet<Vector2Int> Corridors => corridors;
     public List<BoundsInt> RoomsList => roomsList;
     public List<Vector2Int> RoomCenters => roomCenters;
-
-    
-    
-    // [SerializeField] protected PlayerRoom playerRoom;
-    // [SerializeField] protected EnemyRoom enemyRoom;
+    public List<Vector2Int> SpawnPositions => spawnPositions;
 
     private Vector2Int currentPosition;
 
@@ -40,6 +37,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     private void CreateRooms()
     {
         roomsList = new List<BoundsInt>();
+        corridors = new HashSet<Vector2Int>();
 
         roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(
             new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth,
@@ -55,6 +53,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
 
         corridors = ConnectRooms();
+        corridors = IncreaseCorridorBrush3By3(corridors);
         floor.UnionWith(corridors);
 
         tilemapVisualizer.PaintFloorTiles(floor);
@@ -63,17 +62,19 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         SpawnPlayer();
     }
 
-    public void SpawnPlayer() => playerObject.transform.position = (Vector3Int)currentPosition;
+    public void SpawnPlayer() => playerObject.transform.position = new Vector3(currentPosition.x, currentPosition.y, 0);
 
     private HashSet<Vector2Int> CreateRoomsRandomly()
     {
-        HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
+        floor = new HashSet<Vector2Int>();
+        spawnPositions = new List<Vector2Int>();
 
         Vector2Int roomCenter = new Vector2Int();
-        
+
         foreach (BoundsInt roomBounds in roomsList)
         {
             roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
+            spawnPositions.Add(roomCenter);
 
             HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
             foreach (Vector2Int position in roomFloor)
@@ -91,9 +92,9 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         return floor;
     }
 
-    private IEnumerable<Vector2Int> ConnectRooms()
+    private HashSet<Vector2Int> ConnectRooms()
     {
-        HashSet<Vector2Int> corridors = new HashSet<Vector2Int>();
+        corridors = new HashSet<Vector2Int>();
         Vector2Int currentRoomCenter = roomCenters[Random.Range(0, roomCenters.Count)];
         roomCenters.Remove(currentRoomCenter);
 
@@ -107,6 +108,27 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
 
         return corridors;
+    }
+
+    public HashSet<Vector2Int> IncreaseCorridorBrush3By3(HashSet<Vector2Int> corridor)
+    {
+        HashSet<Vector2Int> newCorridor = new HashSet<Vector2Int>();
+
+        for (int i = 1; i < corridors.Count; i++)
+        {
+            for (int x = -1; x < 2; x++)
+            {
+                for (int y = -1; y < 2; y++)
+                {
+                    foreach (Vector2Int vector2Int in corridors)
+                    {
+                        newCorridor.Add(vector2Int + new Vector2Int(x,y));
+                    }
+                }
+            }
+        }
+
+        return newCorridor;
     }
 
     private IEnumerable<Vector2Int> CreateCorridor(Vector2Int currentRoomCenter, Vector2Int destination)

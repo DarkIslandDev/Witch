@@ -10,7 +10,7 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] protected int corridorCount = 5;
     [SerializeField] [Range(0.1f, 1f)] protected float roomPercent = 0.8f;
 
-    private Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
+    private readonly Dictionary<Vector2Int, HashSet<Vector2Int>> roomsDictionary = new Dictionary<Vector2Int, HashSet<Vector2Int>>();
 
     private HashSet<Vector2Int> floorPositions, corridorPositions;
     

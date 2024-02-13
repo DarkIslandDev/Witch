@@ -25,9 +25,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameOverDialog gameOverDialog;
     [SerializeField] private GameTimer gameTimer;
     [SerializeField] private PauseMenu pauseMenu;
-    [SerializeField] protected AbstractDungeonGenerator dungeonGenerator;
+    [SerializeField] protected DungeonGenerator dungeonGenerator;
 
-    public AbstractDungeonGenerator DungeonGenerator => dungeonGenerator;
+    public DungeonGenerator DungeonGenerator => dungeonGenerator;
     
     private float levelTime = 0;
     private float timeSinceLastMonsterSpawned;
