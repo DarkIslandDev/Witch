@@ -8,6 +8,10 @@ public class DungeonTilesSO : ScriptableObject
     [Header("Floor tiles")]
     public TileBase floorTile;
     
+    [Header("Door tiles")]
+    public TileBase leftDoorTile;
+    public TileBase rightDoorTile;
+    
     [Header("Wall tiles")]
     public TileBase wallTop;
     public TileBase wallSideRight;

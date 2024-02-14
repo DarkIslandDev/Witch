@@ -12,8 +12,8 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] protected int dungeonWidth = 20;
     [SerializeField] protected int dungeonHeight = 20;
 
-    [SerializeField] [Range(0, 10)] protected int offset = 1;
-    [SerializeField] protected bool randomWalkRooms = false;
+    protected int offset = 1;
+    protected bool randomWalkRooms = false;
 
     protected List<BoundsInt> roomsList;
     protected HashSet<Vector2Int> floor;
@@ -21,12 +21,9 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     protected List<Vector2Int> roomCenters;
     protected List<Vector2Int> spawnPositions;
 
-    public HashSet<Vector2Int> Floor => floor;
-    public HashSet<Vector2Int> Corridors => corridors;
     public List<BoundsInt> RoomsList => roomsList;
     public List<Vector2Int> SpawnPositions => spawnPositions;
     
-    private Vector2Int currentPosition;
 
     protected override void RunProceduralGeneration() => CreateRooms();
 
@@ -41,8 +38,10 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth,
             minRoomHeight);
         
-        floor = randomWalkRooms ? CreateRoomsRandomly() : CreateSimpleRooms();
-
+        // floor = randomWalkRooms ? CreateRoomsRandomly() : CreateSimpleRooms();
+        
+        floor = CreateRoomsRandomly();
+        
         foreach (BoundsInt room in roomsList)
         {
             roomCenters.Add((Vector2Int)Vector3Int.RoundToInt(room.center));
@@ -51,6 +50,11 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         corridors = ConnectRooms();
         corridors = IncreaseCorridorBrush3By3(corridors);
         floor.UnionWith(corridors);
+
+        if (rooms.Count < 17)
+        {
+            RunProceduralGeneration();
+        }
 
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
@@ -207,11 +211,10 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
             foreach (Vector2Int position in roomFloor)
             {
-                if (position.x >= (roomBounds.xMin + 2 + offset) && position.x <= (roomBounds.xMax - 2 - offset) &&
-                    position.y >= (roomBounds.yMin + 2 - offset) && position.y <= (roomBounds.yMax - 2 - offset))
+                if (position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset) &&
+                    position.y >= (roomBounds.yMin - offset) && position.y <= (roomBounds.yMax - offset))
                 {
                     floor.Add(position);
-
                     newRoom.TilePositions.Add(position);
 
                 }
@@ -219,9 +222,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             rooms.Add(newRoom);
             
         }
-
-        currentPosition = roomCenter;
-
+        
         return floor;
     }
 }

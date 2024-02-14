@@ -7,56 +7,6 @@ using UnityEngine.Tilemaps;
 /// </summary>
 public static class WallByteTypes
 {
-    // public static TileBase FindRightWall(DungeonTilesSO dungeonTiles, int index)
-    // {
-    //     TileBase tile = null;
-    //
-    //     for (int i = 0; i < walls.Count; i++)
-    //     {
-    //         if (walls[i].Contains(index))
-    //         {
-    //             tile = dungeonTiles.walls[i];
-    //         }
-    //     }
-    //
-    //     return tile;
-    // }
-    //
-    // private static readonly List<HashSet<int>> walls = new List<HashSet<int>>();
-    //
-    // public static void AddAllWallsToList()
-    // {
-    //     walls.Add(wallTop);
-    //     walls.Add(wallSideRight);
-    //     walls.Add(wallSideLeft);
-    //     walls.Add(wallBottom);
-    //     walls.Add(wallInnerCornerDownRight);
-    //     walls.Add(wallInnerCornerDownLeft);
-    //     walls.Add(wallDiagonalCornerDownRight);
-    //     walls.Add(wallDiagonalCornerDownLeft);
-    //     walls.Add(wallDiagonalCornerUpRight);
-    //     walls.Add(wallDiagonalCornerUpLeft);
-    //     walls.Add(wallFull);
-    //     walls.Add(wallFullEightDirections);
-    //     walls.Add(wallBottomEightDirections);
-    // }
-    //
-    // public static void RemoveAllWallsToList()
-    // {
-    //     walls.Remove(wallTop);
-    //     walls.Remove(wallSideRight);
-    //     walls.Remove(wallSideLeft);
-    //     walls.Remove(wallBottom);
-    //     walls.Remove(wallInnerCornerDownRight);
-    //     walls.Remove(wallInnerCornerDownLeft);
-    //     walls.Remove(wallDiagonalCornerDownRight);
-    //     walls.Remove(wallDiagonalCornerDownLeft);
-    //     walls.Remove(wallDiagonalCornerUpRight);
-    //     walls.Remove(wallDiagonalCornerUpLeft);
-    //     walls.Remove(wallFull);
-    //     walls.Remove(wallFullEightDirections);
-    //     walls.Remove(wallBottomEightDirections);
-    // }
 
     public static HashSet<int> wallTop = new HashSet<int>
     {

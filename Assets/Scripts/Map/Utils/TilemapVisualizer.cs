@@ -33,6 +33,37 @@ public class TilemapVisualizer : MonoBehaviour
         }
     }
 
+    // public void PaintSingleWall(Vector2Int position, string binaryType)
+    // {
+    //     int typeAsInt = Convert.ToInt32(binaryType, 2);
+    //     TileBase tile = FindMatchingWallTile(typeAsInt);
+    //
+    //     if (tile != null)
+    //     {
+    //         PaintSingleTile(wallTilemap, tile, position);
+    //     }
+    // }
+    //
+    // private TileBase FindMatchingWallTile(int typeAsInt)
+    // {
+    //     Dictionary<HashSet<int>, TileBase> wallTiles = new Dictionary<HashSet<int>, TileBase>()
+    //     {
+    //         {WallByteTypes.wallTop, dungeonTilesSO.wallTop},
+    //         {WallByteTypes.wallSideRight, dungeonTilesSO.wallSideRight},
+    //         {WallByteTypes.wallSideLeft, dungeonTilesSO.wallSideLeft},
+    //         {WallByteTypes.wallBottom, dungeonTilesSO.wallBottom},
+    //         {WallByteTypes.wallFull, dungeonTilesSO.wallFull},
+    //         {WallByteTypes.wallInnerCornerDownRight, dungeonTilesSO.wallInnerCornerDownRight},
+    //         {WallByteTypes.wallInnerCornerDownLeft, dungeonTilesSO.wallInnerCornerDownLeft},
+    //         {WallByteTypes.wallDiagonalCornerDownRight, dungeonTilesSO.wallDiagonalCornerDownRight},
+    //         {WallByteTypes.wallDiagonalCornerDownLeft, dungeonTilesSO.wallDiagonalCornerDownLeft},
+    //         {WallByteTypes.wallDiagonalCornerUpRight, dungeonTilesSO.wallDiagonalCornerUpRight},
+    //         {WallByteTypes.wallDiagonalCornerUpLeft, dungeonTilesSO.wallDiagonalCornerUpLeft}
+    //     };
+    //
+    //     return wallTiles.ContainsKey(new HashSet<int> { typeAsInt }) ? wallTiles[new HashSet<int> { typeAsInt }] : null;
+    // }
+
     public void PaintSingleBasicWall(Vector2Int position, string binaryType)
     {
         int typeAsInt = Convert.ToInt32(binaryType, 2);
@@ -134,17 +165,16 @@ public class TilemapVisualizer : MonoBehaviour
         sp.sprite = item;
         go.transform.SetParent(itemTilemap.transform);
     }
+    
+    public void PaintDoorTiles(IEnumerable<Vector2Int> doorPositions, TileBase doorTile)
+    {
+        PaintTiles(doorPositions, wallTilemap, doorTile);
+    }
 
     public void Clear()
     {
         floorTilemap.ClearAllTiles();
         wallTilemap.ClearAllTiles();
-        // itemTilemap.ClearAllTiles();
-
-        // for (int i = 0; i < itemTiles.Count; i++)
-        // {
-        //     Destroy(itemTiles[i].gameObject);
-        //     itemTiles.Remove(itemTiles[i]);
-        // }
+        
     }
 }

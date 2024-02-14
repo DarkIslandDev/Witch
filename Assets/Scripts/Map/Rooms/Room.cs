@@ -18,5 +18,6 @@ public class Room
     public bool BossRoom { get => bossRoom; set => bossRoom = value; }
     public bool TraderRoom { get => traderRoom; set => traderRoom = value; }
     public List<Vector2Int> TilePositions { get => tilePositions; set => tilePositions = value; }
+    public List<BoundsInt> TileBounds { get => tileBounds; set => tileBounds = value; }
     public List<ItemData> ItemData { get => itemData; set => itemData = value; }
 }
