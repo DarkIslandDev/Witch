@@ -32,7 +32,10 @@ public class SimpleRandomWalkDungeonGenerator : AbstractDungeonGenerator
             IEnumerable<Vector2Int> path = ProceduralGenerationAlgorithms.SimpleRandomWalk(currentPosition, randomWalkParameters.walkLenght);
             floorPositions.UnionWith(path);
 
-            if (randomWalkParameters.startRandomlyEachIteration) currentPosition = floorPositions.ElementAt(Random.Range(0, floorPositions.Count));
+            if (randomWalkParameters.startRandomlyEachIteration)
+            {
+                currentPosition = floorPositions.ElementAt(Random.Range(0, floorPositions.Count));
+            }
         }
 
         return floorPositions;

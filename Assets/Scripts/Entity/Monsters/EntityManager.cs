@@ -160,6 +160,15 @@ public class EntityManager : MonoBehaviour
             ? GetRandomMonsterSpawnPositionPlayerVelocity()
             : GetRandomMonsterSpawnPosition();
 
+        foreach (BoundsInt room in levelManager.DungeonGenerator.RoomsList)
+        {
+            if (spawnPosition.x !>= (room.xMin) && spawnPosition.x !<= (room.xMax) &&
+                spawnPosition.y !>= (room.yMin) && spawnPosition.y !<= (room.yMax))
+            {
+                DespawnMonster(monsterPoolIndex, monsterPools[monsterPoolIndex].Get(), false);
+            }
+        }
+        
         return SpawnMonster(monsterPoolIndex, spawnPosition, monsterBlueprint, hpBuff);
     }
 
@@ -182,11 +191,18 @@ public class EntityManager : MonoBehaviour
     {
         Vector2[] sideDirections = { Vector2.left, Vector2.up, Vector2.right, Vector2.down };
         int sideIndex = Random.Range(0, 4);
-        Vector2 spawnPosition = new Vector2();
-        
-        Vector2 room = levelManager.DungeonGenerator.SpawnPositions[Random.Range(0, levelManager.DungeonGenerator.SpawnPositions.Count)];
 
-        spawnPosition = room;
+        Room newRoom = levelManager.DungeonGenerator.Rooms[Random.Range(0, levelManager.DungeonGenerator.Rooms.Count)];
+        Vector2Int newRoomPosition = new Vector2Int();
+        
+        if (!newRoom.SafeRoom)
+        {
+            newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
+        }
+        
+        float roomX = newRoomPosition.x;
+        float roomY = newRoomPosition.y;
+        Vector2 spawnPosition = new Vector2(roomX, roomY);
         
         // if (sideIndex % 2 == 0)
         // {
@@ -240,7 +256,7 @@ public class EntityManager : MonoBehaviour
             }
         }
 
-        Vector2 spawnPosition;
+        
         // if (sideIndex % 2 == 0)
         // {
         //     spawnPosition = (Vector2)player.transform.position +
@@ -257,10 +273,18 @@ public class EntityManager : MonoBehaviour
         // }
         
         
-        Vector2 room = levelManager.DungeonGenerator.SpawnPositions[Random.Range(0, levelManager.DungeonGenerator.SpawnPositions.Count)];
-
-        spawnPosition = room;
-
+        Room newRoom = levelManager.DungeonGenerator.Rooms[Random.Range(0, levelManager.DungeonGenerator.Rooms.Count)];
+        Vector2Int newRoomPosition = new Vector2Int();
+        
+        if (!newRoom.SafeRoom)
+        {
+            newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
+        }
+        
+        float roomX = newRoomPosition.x;
+        float roomY = newRoomPosition.y;
+        Vector2 spawnPosition = new Vector2(roomX, roomY);
+        
         return spawnPosition;
     }
 
@@ -326,12 +350,15 @@ public class EntityManager : MonoBehaviour
 
         do
         {
-            Vector2 spawanDirection = Random.insideUnitCircle.normalized;
-            Vector2 spawnPosition = (Vector2)player.transform.position + spawanDirection *
+            Vector2 spawnDirection = Random.insideUnitCircle.normalized;
+            Vector2 spawnPosition = (Vector2)player.transform.position + spawnDirection *
                 (minSpawnDistance + monsterSpawnBufferDistance + Random.Range(0, chestSpawnRange));
-            newChest.transform.position = spawnPosition;
+            Vector2 room = levelManager.DungeonGenerator.SpawnPositions[Random.Range(0, levelManager.DungeonGenerator.SpawnPositions.Count)];
 
-            overlapsOtherChest = chests.Any(chest => Vector2.Distance(chest.transform.position, spawnPosition) < 0.5f);
+            
+            newChest.transform.position = room;
+
+            overlapsOtherChest = chests.Any(chest => Vector2.Distance(chest.transform.position, room) < 0.5f);
         } while (overlapsOtherChest && tries++ < 100);
 
         chests.Add(newChest);

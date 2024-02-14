@@ -15,37 +15,33 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     [SerializeField] [Range(0, 10)] protected int offset = 1;
     [SerializeField] protected bool randomWalkRooms = false;
 
-    [SerializeField] protected HashSet<Vector2Int> floor;
-    [SerializeField] protected HashSet<Vector2Int> corridors;
-    [SerializeField] protected List<BoundsInt> roomsList;
-    [SerializeField] protected List<Vector2Int> roomCenters;
-    [SerializeField] protected List<Vector2Int> spawnPositions;
+    protected List<BoundsInt> roomsList;
+    protected HashSet<Vector2Int> floor;
+    protected HashSet<Vector2Int> corridors;
+    protected List<Vector2Int> roomCenters;
+    protected List<Vector2Int> spawnPositions;
 
     public HashSet<Vector2Int> Floor => floor;
     public HashSet<Vector2Int> Corridors => corridors;
     public List<BoundsInt> RoomsList => roomsList;
-    public List<Vector2Int> RoomCenters => roomCenters;
     public List<Vector2Int> SpawnPositions => spawnPositions;
-
+    
     private Vector2Int currentPosition;
 
-    protected override void RunProceduralGeneration()
-    {
-        CreateRooms();
-    }
+    protected override void RunProceduralGeneration() => CreateRooms();
 
     private void CreateRooms()
     {
         roomsList = new List<BoundsInt>();
         corridors = new HashSet<Vector2Int>();
+        spawnPositions = new List<Vector2Int>();
+        roomCenters = new List<Vector2Int>();
 
         roomsList = ProceduralGenerationAlgorithms.BinarySpacePartitioning(
             new BoundsInt((Vector3Int)startPosition, new Vector3Int(dungeonWidth, dungeonHeight, 0)), minRoomWidth,
             minRoomHeight);
-
+        
         floor = randomWalkRooms ? CreateRoomsRandomly() : CreateSimpleRooms();
-
-        roomCenters = new List<Vector2Int>();
 
         foreach (BoundsInt room in roomsList)
         {
@@ -58,43 +54,32 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
-
+        
+        rooms[Random.Range(0, rooms.Count)].SafeRoom = true;
+        
         SpawnPlayer();
+
     }
 
-    public void SpawnPlayer() => playerObject.transform.position = new Vector3(currentPosition.x, currentPosition.y, 0);
-
-    private HashSet<Vector2Int> CreateRoomsRandomly()
+    public void SpawnPlayer()
     {
-        floor = new HashSet<Vector2Int>();
-        spawnPositions = new List<Vector2Int>();
-
-        Vector2Int roomCenter = new Vector2Int();
-
-        foreach (BoundsInt roomBounds in roomsList)
+        Room newRoom = rooms.Find(x => x.SafeRoom);
+        Vector2Int newRoomPosition = new Vector2Int();
+        
+        if (newRoom.SafeRoom)
         {
-            roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
-            spawnPositions.Add(roomCenter);
-
-            HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
-            foreach (Vector2Int position in roomFloor)
-            {
-                if (position.x >= (roomBounds.xMin + offset) && position.x <= (roomBounds.xMax - offset) &&
-                    position.y >= (roomBounds.yMin - offset) && position.y <= (roomBounds.yMax - offset))
-                {
-                    floor.Add(position);
-                }
-            }
+            newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
         }
-
-        currentPosition = roomCenter;
-
-        return floor;
+        
+        float spawnX = newRoomPosition.x;
+        float spawnY = newRoomPosition.y;
+        playerObject.transform.position = new Vector3(spawnX, spawnY, 0);
     }
-
+        
+        
+    
     private HashSet<Vector2Int> ConnectRooms()
     {
-        corridors = new HashSet<Vector2Int>();
         Vector2Int currentRoomCenter = roomCenters[Random.Range(0, roomCenters.Count)];
         roomCenters.Remove(currentRoomCenter);
 
@@ -187,7 +172,6 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private HashSet<Vector2Int> CreateSimpleRooms()
     {
-        HashSet<Vector2Int> floor = new HashSet<Vector2Int>();
         foreach (BoundsInt room in roomsList)
         {
             for (int col = offset; col < room.size.x - offset; col++)
@@ -199,6 +183,44 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
                 }
             }
         }
+
+        return floor;
+    }
+    
+    private HashSet<Vector2Int> CreateRoomsRandomly()
+    {
+        floor = new HashSet<Vector2Int>();
+        rooms = new List<Room>();
+
+        Vector2Int roomCenter = new Vector2Int();
+
+        foreach (BoundsInt roomBounds in roomsList)
+        {
+            roomCenter = new Vector2Int(Mathf.RoundToInt(roomBounds.center.x), Mathf.RoundToInt(roomBounds.center.y));
+            spawnPositions.Add(roomCenter);
+
+            Room newRoom = new Room
+            {
+                TilePositions = new List<Vector2Int>()
+            };
+
+            HashSet<Vector2Int> roomFloor = RunRandomWalk(randomWalkParameters, roomCenter);
+            foreach (Vector2Int position in roomFloor)
+            {
+                if (position.x >= (roomBounds.xMin + 2 + offset) && position.x <= (roomBounds.xMax - 2 - offset) &&
+                    position.y >= (roomBounds.yMin + 2 - offset) && position.y <= (roomBounds.yMax - 2 - offset))
+                {
+                    floor.Add(position);
+
+                    newRoom.TilePositions.Add(position);
+
+                }
+            }
+            rooms.Add(newRoom);
+            
+        }
+
+        currentPosition = roomCenter;
 
         return floor;
     }
