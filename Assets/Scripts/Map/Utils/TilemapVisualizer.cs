@@ -10,6 +10,7 @@ public class TilemapVisualizer : MonoBehaviour
 {
     [SerializeField] protected Tilemap floorTilemap;
     [SerializeField] protected Tilemap wallTilemap;
+    [SerializeField] protected Tilemap doorTilemap;
     [SerializeField] protected Tilemap itemTilemap;
     [SerializeField] protected GameObject itemTilePrefab;
     [SerializeField] protected DungeonTilesSO dungeonTilesSO;
@@ -166,8 +167,9 @@ public class TilemapVisualizer : MonoBehaviour
         go.transform.SetParent(itemTilemap.transform);
     }
     
-    public void PaintDoorTiles(IEnumerable<Vector2Int> doorPositions, TileBase doorTile)
+    public void PaintDoorTiles(IEnumerable<Vector2Int> doorPositions, bool isLeft)
     {
+        TileBase doorTile = isLeft ? dungeonTilesSO.leftDoorTile : dungeonTilesSO.rightDoorTile;
         PaintTiles(doorPositions, wallTilemap, doorTile);
     }
 
@@ -175,6 +177,6 @@ public class TilemapVisualizer : MonoBehaviour
     {
         floorTilemap.ClearAllTiles();
         wallTilemap.ClearAllTiles();
-        
+        doorTilemap.ClearAllTiles();
     }
 }
