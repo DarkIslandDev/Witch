@@ -208,23 +208,23 @@ public class AbilityManager : MonoBehaviour
     /// </summary>
     private Ability PullAbility(WeightedAbilities abilities)
     {
-        while (true)
-        {
-            float rand = Random.Range(0f, abilities.Weight);
-            float cumulative = 0;
-            foreach (Ability ability in abilities)
-            {
-                cumulative += ability.DropWeight;
-                if (rand < cumulative)
-                {
-                    abilities.Remove(ability);
-                    return ability;
-                }
-            }
+        float totalWeight = abilities.GetTotalWeight();
+        float randomWeight = Random.Range(0, totalWeight);
+        float cumulativeWeight = 0;
 
-            Debug.LogError("Не удалось вытащить абилку");
-            return null;
+        for (int i = 0; i < abilities.Count; i++)
+        {
+            Ability ability = abilities[i];
+            cumulativeWeight += ability.DropWeight;
+
+            if (randomWeight < cumulativeWeight)
+            {
+                abilities.RemoveAt(i);
+                return ability;
+            }
         }
+
+        return null;
     }
 
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -45,8 +46,8 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         }
 
         corridors = ConnectRooms();
-        corridors = IncreaseCorridorBrush3By3(corridors);
-        CreateRoomEntrances();
+        corridors = IncreaseCorridorBrush2By2(corridors);
+
         floor.UnionWith(corridors);
 
         if (rooms.Count < 17) RunProceduralGeneration();
@@ -79,8 +80,6 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         float spawnY = newRoomPosition.y;
         playerObject.transform.position = new Vector3(spawnX, spawnY, 0);
     }
-        
-        
     
     private HashSet<Vector2Int> ConnectRooms()
     {
@@ -92,7 +91,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             Vector2Int closest = FindClosestPointTo(currentRoomCenter);
             roomCenters.Remove(closest);
             IEnumerable<Vector2Int> newCorridor = CreateCorridor(currentRoomCenter, closest);
-
+            
             currentRoomCenter = closest;
             corridors.UnionWith(newCorridor);
         }
@@ -100,7 +99,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         return corridors;
     }
 
-    private HashSet<Vector2Int> IncreaseCorridorBrush3By3(HashSet<Vector2Int> corridor)
+    private HashSet<Vector2Int> IncreaseCorridorBrush2By2(HashSet<Vector2Int> corridor)
     {
         HashSet<Vector2Int> newCorridor = new HashSet<Vector2Int>();
 
@@ -124,7 +123,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
     private IEnumerable<Vector2Int> CreateCorridor(Vector2Int position, Vector2Int destination)
     {
         HashSet<Vector2Int> corridor = new HashSet<Vector2Int> { position };
-
+        
         while (position.y != destination.y)
         {
             if (destination.y > position.y)
@@ -135,7 +134,6 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             {
                 position += Vector2Int.down;
             }
-
             corridor.Add(position);
         }
 
@@ -238,7 +236,7 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
                     if (newDoor.Count >= 2)
                     {
                         // Если проход содержит две позиции, добавляем его в список проходов комнаты и выходим из цикла
-                        foreach (var newDoors in newDoor)
+                        foreach (Vector2Int newDoors in newDoor)
                         {
                             room.Doors.Add(newDoors);
                         }
@@ -248,6 +246,37 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
             }
         }
     }
+    
+    // Function to find passages and add their positions as doors to a room
+    public void FindAndAddPassages(Room room, List<Vector2Int> corridorPositions)
+    {
+        if (room.Doors == null)
+        {
+            room.Doors = new List<Vector2Int>();
+        }
 
+        // Iterate through the corridor positions
+        foreach (Vector2Int corridorPos in corridorPositions)
+        {
+            // Check if the corridor position is adjacent to the room
+            if (IsAdjacentToRoom(room, corridorPos))
+            {
+                // Add the corridor position as a door
+                room.Doors.Add(corridorPos);
+            }
+        }
+    }
 
+    // Function to check if a position is adjacent to the room
+    private bool IsAdjacentToRoom(Room room, Vector2Int position)
+    {
+        // Convert the position to a Vector3Int
+        Vector3Int position3D = new Vector3Int(position.x, position.y, 0);
+
+        // Check if the position is within one unit of the room's bounds
+        return room.TileBounds.Contains(position3D + Vector3Int.left) ||
+               room.TileBounds.Contains(position3D + Vector3Int.right) ||
+               room.TileBounds.Contains(position3D + Vector3Int.up) ||
+               room.TileBounds.Contains(position3D + Vector3Int.down);
+    }
 }

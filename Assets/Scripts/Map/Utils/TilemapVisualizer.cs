@@ -28,42 +28,12 @@ public class TilemapVisualizer : MonoBehaviour
 
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
-        foreach (Vector2Int position in positions)
-        {
-            PaintSingleTile(tilemap, tile, position);
-        }
+        if (positions != null)
+            foreach (Vector2Int position in positions)
+            {
+                PaintSingleTile(tilemap, tile, position);
+            }
     }
-
-    // public void PaintSingleWall(Vector2Int position, string binaryType)
-    // {
-    //     int typeAsInt = Convert.ToInt32(binaryType, 2);
-    //     TileBase tile = FindMatchingWallTile(typeAsInt);
-    //
-    //     if (tile != null)
-    //     {
-    //         PaintSingleTile(wallTilemap, tile, position);
-    //     }
-    // }
-    //
-    // private TileBase FindMatchingWallTile(int typeAsInt)
-    // {
-    //     Dictionary<HashSet<int>, TileBase> wallTiles = new Dictionary<HashSet<int>, TileBase>()
-    //     {
-    //         {WallByteTypes.wallTop, dungeonTilesSO.wallTop},
-    //         {WallByteTypes.wallSideRight, dungeonTilesSO.wallSideRight},
-    //         {WallByteTypes.wallSideLeft, dungeonTilesSO.wallSideLeft},
-    //         {WallByteTypes.wallBottom, dungeonTilesSO.wallBottom},
-    //         {WallByteTypes.wallFull, dungeonTilesSO.wallFull},
-    //         {WallByteTypes.wallInnerCornerDownRight, dungeonTilesSO.wallInnerCornerDownRight},
-    //         {WallByteTypes.wallInnerCornerDownLeft, dungeonTilesSO.wallInnerCornerDownLeft},
-    //         {WallByteTypes.wallDiagonalCornerDownRight, dungeonTilesSO.wallDiagonalCornerDownRight},
-    //         {WallByteTypes.wallDiagonalCornerDownLeft, dungeonTilesSO.wallDiagonalCornerDownLeft},
-    //         {WallByteTypes.wallDiagonalCornerUpRight, dungeonTilesSO.wallDiagonalCornerUpRight},
-    //         {WallByteTypes.wallDiagonalCornerUpLeft, dungeonTilesSO.wallDiagonalCornerUpLeft}
-    //     };
-    //
-    //     return wallTiles.ContainsKey(new HashSet<int> { typeAsInt }) ? wallTiles[new HashSet<int> { typeAsInt }] : null;
-    // }
 
     public void PaintSingleBasicWall(Vector2Int position, string binaryType)
     {

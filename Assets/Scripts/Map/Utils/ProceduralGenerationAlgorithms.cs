@@ -40,9 +40,11 @@ public static class ProceduralGenerationAlgorithms
         Queue<BoundsInt> roomsQueue = new Queue<BoundsInt>();
         List<BoundsInt> roomsList = new List<BoundsInt>();
         roomsQueue.Enqueue(spaceToSplit);
+
         while (roomsQueue.Count > 0)
         {
             BoundsInt room = roomsQueue.Dequeue();
+
             if (room.size.y >= minHeight && room.size.x >= minWidth)
             {
                 if (Random.value < 0.5f)
@@ -83,7 +85,10 @@ public static class ProceduralGenerationAlgorithms
             roomsQueue.Enqueue(spaceToSplit);
             roomsList.Add(roomsQueue.Dequeue());
 
-            if (roomsList.Count == 0) Debug.LogError("0 ROOM GENERATE");
+            if (roomsList.Count == 0)
+            {
+                Debug.LogError("0 ROOM GENERATED");
+            }
         }
 
         return roomsList;
@@ -91,7 +96,7 @@ public static class ProceduralGenerationAlgorithms
 
     private static void SplitVertically(int minWidth, Queue<BoundsInt> roomsQueue, BoundsInt room)
     {
-        var xSplit = Random.Range(1, room.size.x - minWidth);
+        int xSplit = Random.Range(1, room.size.x - minWidth);
         BoundsInt room1 = new BoundsInt(room.min, new Vector3Int(xSplit, room.size.y, room.size.z));
         BoundsInt room2 = new BoundsInt(new Vector3Int(room.min.x + xSplit, room.min.y, room.min.z),
             new Vector3Int(room.size.x - xSplit, room.size.y, room.size.z));
@@ -101,7 +106,7 @@ public static class ProceduralGenerationAlgorithms
 
     private static void SplitHorizontally(int minHeight, Queue<BoundsInt> roomsQueue, BoundsInt room)
     {
-        var ySplit = Random.Range(1, room.size.y - minHeight);
+        int ySplit = Random.Range(1, room.size.y - minHeight);
         BoundsInt room1 = new BoundsInt(room.min, new Vector3Int(room.size.x, ySplit, room.size.z));
         BoundsInt room2 = new BoundsInt(new Vector3Int(room.min.x, room.min.y + ySplit, room.min.z),
             new Vector3Int(room.size.x, room.size.y - ySplit, room.size.z));

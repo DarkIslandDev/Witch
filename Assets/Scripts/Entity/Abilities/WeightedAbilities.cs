@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
-public class WeightedAbilities : IEnumerable<Ability>
+public class WeightedAbilities : IList<Ability>
 {
     private List<Ability> abilities;
     private float weight;
@@ -11,38 +11,70 @@ public class WeightedAbilities : IEnumerable<Ability>
 
     public float Weight { get => weight; set => weight = value; }
     public int Count => abilities.Count;
+    public bool IsReadOnly => false;
     public List<Ability> Abilities => abilities;
-    
+
+    public Ability this[int index]
+    {
+        get => abilities[index];
+        set
+        {
+            weight -= abilities[index].DropWeight;
+            abilities[index] = value;
+            weight += value.DropWeight;
+        }
+    }
+
     public WeightedAbilities()
     {
         abilities = new List<Ability>();
         weight = 0;
     }
 
+    public WeightedAbilities(List<Ability> abilities) => this.abilities = abilities;
+
+    public float GetTotalWeight() => abilities.Sum(ability => ability.DropWeight);
+
     public void Add(Ability ability)
     {
         abilities.Add(ability);
-        weight += ability.DropWeight;
+        if (ability != null) weight += ability.DropWeight;
     }
 
-    public void Remove(Ability ability)
+    public void Clear()
     {
-        if (ability != null)
-        {
-            weight -= ability.DropWeight;
-            abilities.Remove(ability);
-        }
+        abilities.Clear();
+        weight = 0;
     }
 
-    public void RemoveAll()
+    public bool Contains(Ability ability) => abilities.Contains(ability);
+
+    public void CopyTo(Ability[] array, int arrayIndex) => abilities.CopyTo(array, arrayIndex);
+
+    public int IndexOf(Ability ability) => abilities.IndexOf(ability);
+
+    public void Insert(int index, Ability ability)
     {
-        for (int i = 0; i < abilities.Count; i++)
-        {
-            weight -= abilities[i].DropWeight;
-            abilities.Remove(abilities[i]);
-        }
+        abilities.Insert(index, ability);
+        if (ability != null) weight += ability.DropWeight;
     }
-    
+
+    public bool Remove(Ability ability)
+    {
+        if (abilities.Remove(ability))
+        {
+            if (ability != null) weight -= ability.DropWeight;
+            return true;
+        }
+        return false;
+    }
+
+    public void RemoveAt(int index)
+    {
+        weight -= abilities[index].DropWeight;
+        abilities.RemoveAt(index);
+    }
+
     public Ability Find(Predicate<Ability> match)
     {
         if (match == null)
@@ -50,20 +82,10 @@ public class WeightedAbilities : IEnumerable<Ability>
             throw new ArgumentNullException();
         }
 
-        for (int i = 0; i < abilities.Count; i++)
-        {
-            if (match(abilities[i]))
-            {
-                return abilities[i];
-            }
-        }
-
-        return default(Ability);
+        return abilities.FirstOrDefault(t => match(t));
     }
 
-    public IEnumerator<Ability> GetEnumerator() => (abilities as IEnumerable<Ability>).GetEnumerator();
-        
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEnumerator<Ability> GetEnumerator() => abilities.GetEnumerator();
 
-    
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

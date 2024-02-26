@@ -67,8 +67,6 @@ public class LevelManager : MonoBehaviour
         pauseMenu.Close();
         gameOverDialog.Close();
         abilitySelectionDialog.Close();
-        
-
     }
     
     private void Update()
