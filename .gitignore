@@ -1,4 +1,4 @@
-# Updated Unity .gitignore file with .meta files and Rider-specific entries included
+# Updated Unity .gitignore file with .meta files, Rider-specific entries, and .utpm directory included
 unity_gitignore = """
 # Unity .gitignore file
 # ---------------------
@@ -32,10 +32,13 @@ unity_gitignore = """
 # JetBrains Rider generated files
 .idea/
 *.sln.iml
+
+# Ignore .utpm directory
+.utpm/
 """
 
 # Save the updated .gitignore file
 with open(".gitignore", "w") as gitignore_file:
     gitignore_file.write(unity_gitignore)
 
-print(".gitignore file updated with .meta files and Rider-specific entries included.")
+print(".gitignore file updated with .meta files, Rider-specific entries, and .utpm directory included.")
