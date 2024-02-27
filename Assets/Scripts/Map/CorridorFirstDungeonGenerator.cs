@@ -50,8 +50,8 @@ public class CorridorFirstDungeonGenerator : SimpleRandomWalkDungeonGenerator
             floorPositions.UnionWith(corridors[i]);
         }
 
-        tilemapVisualizer.PaintFloorTiles(floorPositions);
-        WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
+        // tilemapVisualizer.PaintFloorTiles(floorPositions);
+        // WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
     }
 
     private void CreateRoomAtDeadEnd(List<Vector2Int> deadEnds, HashSet<Vector2Int> roomFloors)

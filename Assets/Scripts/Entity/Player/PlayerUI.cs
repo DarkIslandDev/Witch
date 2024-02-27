@@ -9,7 +9,7 @@ public class PlayerUI : MonoBehaviour
     [Header("Point bars and text")]
     public PointBar levelBar;
     public TextMeshProUGUI levelText;
-    public PointBar healthBar;
+    public HealthBar healthBar;
     public TextMeshProUGUI healthText;
 
     public AbilitySelectionDialog abilitySelectionDialog;

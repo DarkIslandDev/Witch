@@ -160,10 +160,10 @@ public class EntityManager : MonoBehaviour
             ? GetRandomMonsterSpawnPositionPlayerVelocity()
             : GetRandomMonsterSpawnPosition();
 
-        foreach (BoundsInt room in levelManager.DungeonGenerator.RoomsList)
+        foreach (Room room in levelManager.DungeonGenerator.Rooms)
         {
-            if (spawnPosition.x !>= (room.xMin) && spawnPosition.x !<= (room.xMax) &&
-                spawnPosition.y !>= (room.yMin) && spawnPosition.y !<= (room.yMax))
+            if (spawnPosition.x !>= (room.TileBounds.xMin) && spawnPosition.x !<= (room.TileBounds.xMax) &&
+                spawnPosition.y !>= (room.TileBounds.yMin) && spawnPosition.y !<= (room.TileBounds.yMax))
             {
                 DespawnMonster(monsterPoolIndex, monsterPools[monsterPoolIndex].Get(), false);
             }

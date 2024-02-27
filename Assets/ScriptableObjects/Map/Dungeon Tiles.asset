@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Dungeon Tiles
   m_EditorClassIdentifier: 
   floorTile: {fileID: 11400000, guid: 7598fa70d82738740bf753ecb38a332c, type: 2}
-  leftDoorTile: {fileID: 11400000, guid: 8612a22f0cccd0e47b44a3e6ed3c298d, type: 2}
-  rightDoorTile: {fileID: 11400000, guid: a63a53c3b157fd94c81b274e88c67209, type: 2}
+  safeZoneFloorTile: {fileID: 11400000, guid: 488605569f36e6f4d8de6021d5b3c240, type: 2}
+  leftDoorTile: {fileID: 6006753742833428116, guid: 26380a9782df64c4c9620eb3618fe826, type: 3}
+  rightDoorTile: {fileID: -2253911629886400664, guid: c0d6d2e1f3f98174ab508cb0ec9faf13, type: 3}
+  closedWall: {fileID: 11400000, guid: b59425987a4e3d84299e2934805023d6, type: 2}
   wallTop: {fileID: 11400000, guid: 22c9f328675568942a63b2770a6a63dc, type: 2}
   wallSideRight: {fileID: 11400000, guid: 56a025a4f1e8ec14ebfa0c2300d95b8e, type: 2}
   wallSideLeft: {fileID: 11400000, guid: 0f895bfef3ebb4f4aacf3fac66196c1c, type: 2}

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(AbstractDungeonGenerator), true)]
@@ -18,7 +17,12 @@ public class RandomDungeonGeneratorEditor : Editor
         
         if (GUILayout.Button("Create dungeon"))
         {
-            generator.GenerateDungeon();    
+            generator.GenerateDungeon();
+        }
+
+        if (GUILayout.Button("Clear field"))
+        {
+            generator.TilemapVisualizer.Clear();
         }
     }
 }

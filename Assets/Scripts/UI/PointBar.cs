@@ -2,11 +2,12 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PointBar : MonoBehaviour
 {
-    [SerializeField] protected RectTransform barBackground;
-    [SerializeField] protected RectTransform barFill;
+    [SerializeField] protected Image barBackground;
+    [SerializeField] protected Image barFill;
     [SerializeField] protected TextMeshProUGUI text;
     [SerializeField] protected bool displayText;
 
@@ -17,8 +18,13 @@ public class PointBar : MonoBehaviour
     protected float minPoints;
     protected float maxPoints;
     protected bool clamp;
-    
+
     public float CurrentPoints { get => currentPoints; set => currentPoints = value; }
+
+    protected virtual void Update()
+    {
+        UpdateDisplay();
+    }
 
     public void Setup(float currentPoints, float minPoints, float maxPoints, bool clamp = true)
     {
@@ -27,18 +33,22 @@ public class PointBar : MonoBehaviour
         this.maxPoints = maxPoints;
         this.clamp = clamp;
 
-        if (displayText ==false) text.text = string.Empty;
-        
+        if (!displayText)
+            text.text = string.Empty;
+
         UpdateDisplay();
     }
 
     public void AddCurrentPoints(float points)
     {
         currentPoints += points;
-        if (currentPoints >= maxPoints) currentPoints = maxPoints;
-        
-        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
-        
+
+        if (currentPoints >= maxPoints)
+            currentPoints = maxPoints;
+
+        if (displayText)
+            text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
         CheckPoints();
         UpdateDisplay();
     }
@@ -47,16 +57,20 @@ public class PointBar : MonoBehaviour
     {
         maxPoints += points;
 
-        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+        if (displayText)
+            text.text = $"{currentPoints:N0} / {maxPoints:N0}";
 
         CheckPoints();
         UpdateDisplay();
     }
-    
-    public void SubstractPoints(float points)
+
+    public virtual void SubstractPoints(float points)
     {
         currentPoints -= points;
-        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
+        if (displayText)
+            text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
         CheckPoints();
         UpdateDisplay();
     }
@@ -64,25 +78,35 @@ public class PointBar : MonoBehaviour
     public void SetPoints(float points)
     {
         currentPoints = points;
-        if (displayText) text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
+        if (displayText)
+            text.text = $"{currentPoints:N0} / {maxPoints:N0}";
+
         CheckPoints();
         UpdateDisplay();
     }
-    
 
-    public void UpdateDisplay() => barFill.sizeDelta = new Vector2(barBackground.rect.width * (currentPoints - minPoints)/(maxPoints - minPoints), barFill.sizeDelta.y);
+    protected virtual void UpdateDisplay()
+    {
+        float fillAmount = Mathf.Clamp01(currentPoints / maxPoints);
+        barFill.fillAmount = fillAmount;
+    }
 
     private void CheckPoints()
     {
         if (currentPoints >= maxPoints)
         {
             onFull?.Invoke();
-            if (clamp) currentPoints = maxPoints;
+
+            if (clamp)
+                currentPoints = maxPoints;
         }
         else if (currentPoints <= minPoints)
         {
             onEmpty?.Invoke();
-            if (clamp) currentPoints = minPoints;
+
+            if (clamp)
+                currentPoints = minPoints;
         }
     }
 }

@@ -18,22 +18,22 @@ public class DungeonRoom : MonoBehaviour
         this.tilemapVisualizer = tilemapVisualizer;
     }
 
-    public void UpdateRoom(bool[] status)
-    {
-        for (int i = 0; i < status.Length; i++)
-        {
-            switch (status[i])
-            {
-                // set active doors or walls
-                case true:
-                    tilemapVisualizer.PaintFloorTiles(doors);
-                    break;
-                case false:
-                    tilemapVisualizer.PaintFloorTiles(walls);
-                    break;
-            }
-        }
-    }
+    // public void UpdateRoom(bool[] status)
+    // {
+    //     for (int i = 0; i < status.Length; i++)
+    //     {
+    //         switch (status[i])
+    //         {
+    //             // set active doors or walls
+    //             case true:
+    //                 tilemapVisualizer.PaintFloorTiles(doors);
+    //                 break;
+    //             case false:
+    //                 tilemapVisualizer.PaintFloorTiles(walls);
+    //                 break;
+    //         }
+    //     }
+    // }
     
     
 }

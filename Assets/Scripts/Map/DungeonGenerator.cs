@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -51,14 +51,9 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
         floor.UnionWith(corridors);
 
         if (rooms.Count < 17) RunProceduralGeneration();
-
-
+        
         tilemapVisualizer.PaintFloorTiles(floor);
         WallGenerator.CreateWalls(floor, tilemapVisualizer);
-        foreach (Room room in rooms)
-        {
-            tilemapVisualizer.PaintDoorTiles(room.Doors, false);
-        }
         
         rooms[Random.Range(0, rooms.Count)].SafeRoom = true;
         
@@ -68,17 +63,22 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private void SpawnPlayer()
     {
-        Room newRoom = rooms.Find(x => x.SafeRoom);
-        Vector2Int newRoomPosition = new Vector2Int();
-        
-        if (newRoom.SafeRoom)
+        // Room newRoom = rooms.Find(x => x.SafeRoom);
+        // Vector2Int newRoomPosition = new Vector2Int();
+        //
+        // if (newRoom.SafeRoom)
+        // {
+        //     newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
+        // }
+        //
+        // float spawnX = newRoomPosition.x;
+        // float spawnY = newRoomPosition.y;
+        // playerObject.transform.position = new Vector3(spawnX, spawnY, 0);
+
+        foreach (Room room in rooms)
         {
-            newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
+            playerObject.transform.position = room.Center;
         }
-        
-        float spawnX = newRoomPosition.x;
-        float spawnY = newRoomPosition.y;
-        playerObject.transform.position = new Vector3(spawnX, spawnY, 0);
     }
     
     private HashSet<Vector2Int> ConnectRooms()

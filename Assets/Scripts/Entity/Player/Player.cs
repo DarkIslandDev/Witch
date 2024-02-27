@@ -130,7 +130,7 @@ public class Player : IDamageable
         currentHealth = playerBlueprint.hp;
         maxHealth = playerBlueprint.hp;
         playerUI.healthBar.Setup(currentHealth, 0, maxHealth, true);
-
+        
         currentLevel = 1;
         playerUI.levelBar.Setup(currentExpirience, 0, nextLevelExpirience, true);
         UpdateLevelDisplay();
@@ -154,8 +154,10 @@ public class Player : IDamageable
         };
         abilityManager.RegisterUpgradeableValue(armor, true);
 
-        shadow.transform.localScale = new Vector3(spriteRenderer.bounds.size.x, shadow.transform.localScale.y,
-            shadow.transform.localScale.z);
+        Vector3 localScale = shadow.transform.localScale;
+        localScale = new Vector3(spriteRenderer.bounds.size.x, localScale.y,
+            localScale.z);
+        shadow.transform.localScale = localScale;
         shadow.SetActive(true);
 
         zPositioner.Init(transform);

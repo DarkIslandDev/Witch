@@ -14,12 +14,12 @@ public class TilemapVisualizer : MonoBehaviour
     [SerializeField] protected Tilemap itemTilemap;
     [SerializeField] protected GameObject itemTilePrefab;
     [SerializeField] protected DungeonTilesSO dungeonTilesSO;
-        
+
     private List<GameObject> itemTiles;
 
     public Tilemap FloorTilemap => floorTilemap;
     public DungeonTilesSO DungeonTilesSoSo => dungeonTilesSO;
-    
+
 
     public void PaintFloorTiles(IEnumerable<Vector2Int> floorPositions)
     {
@@ -29,17 +29,20 @@ public class TilemapVisualizer : MonoBehaviour
     private void PaintTiles(IEnumerable<Vector2Int> positions, Tilemap tilemap, TileBase tile)
     {
         if (positions != null)
+        {
             foreach (Vector2Int position in positions)
             {
                 PaintSingleTile(tilemap, tile, position);
             }
+        }
     }
 
     public void PaintSingleBasicWall(Vector2Int position, string binaryType)
     {
         int typeAsInt = Convert.ToInt32(binaryType, 2);
         TileBase tile = null;
-        
+
+
         if (WallByteTypes.wallTop.Contains(typeAsInt))
         {
             tile = dungeonTilesSO.wallTop;
@@ -61,8 +64,9 @@ public class TilemapVisualizer : MonoBehaviour
             tile = dungeonTilesSO.wallFull;
         }
 
+
         // tile = WallByteTypes.FindRightWall(dungeonTiles, typeAsInt);
-        
+
         if (tile != null) PaintSingleTile(wallTilemap, tile, position);
     }
 
@@ -71,11 +75,12 @@ public class TilemapVisualizer : MonoBehaviour
         Vector3Int tilePosition = tilemap.WorldToCell((Vector3Int)position);
         tilemap.SetTile(tilePosition, tile);
     }
-    
+
     public void PaintSingleCornerWall(Vector2Int position, string binaryType)
     {
         int typeAsInt = Convert.ToInt32(binaryType, 2);
         TileBase tile = null;
+
 
         if (WallByteTypes.wallInnerCornerDownRight.Contains(typeAsInt))
         {
@@ -109,10 +114,11 @@ public class TilemapVisualizer : MonoBehaviour
         {
             tile = dungeonTilesSO.wallBottom;
         }
-        
+
+
         // tile = WallByteTypes.FindRightWall(dungeonTiles, typeAsInt);
-        
-        if (tile != null) 
+
+        if (tile != null)
         {
             PaintSingleTile(wallTilemap, tile, position);
         }
@@ -136,12 +142,12 @@ public class TilemapVisualizer : MonoBehaviour
         sp.sprite = item;
         go.transform.SetParent(itemTilemap.transform);
     }
-    
-    public void PaintDoorTiles(IEnumerable<Vector2Int> doorPositions, bool isLeft)
-    {
-        TileBase doorTile = isLeft ? dungeonTilesSO.leftDoorTile : dungeonTilesSO.rightDoorTile;
-        PaintTiles(doorPositions, wallTilemap, doorTile);
-    }
+
+    // public void PaintDoorTiles(IEnumerable<Vector2Int> doorPositions, bool isLeft)
+    // {
+    //     TileBase doorTile = isLeft ? dungeonTilesSO.leftDoorTile : dungeonTilesSO.rightDoorTile;
+    //     PaintTiles(doorPositions, wallTilemap, doorTile);
+    // }
 
     public void Clear()
     {
