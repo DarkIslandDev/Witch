@@ -63,18 +63,6 @@ public class DungeonGenerator : SimpleRandomWalkDungeonGenerator
 
     private void SpawnPlayer()
     {
-        // Room newRoom = rooms.Find(x => x.SafeRoom);
-        // Vector2Int newRoomPosition = new Vector2Int();
-        //
-        // if (newRoom.SafeRoom)
-        // {
-        //     newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
-        // }
-        //
-        // float spawnX = newRoomPosition.x;
-        // float spawnY = newRoomPosition.y;
-        // playerObject.transform.position = new Vector3(spawnX, spawnY, 0);
-
         foreach (Room room in rooms)
         {
             playerObject.transform.position = room.Center;

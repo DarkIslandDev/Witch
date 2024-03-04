@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class PointBar : MonoBehaviour
 {
-    [SerializeField] protected Image barBackground;
-    [SerializeField] protected Image barFill;
-    [SerializeField] protected TextMeshProUGUI text;
+    // [SerializeField] protected Image barBackground;
+    // [SerializeField] protected Image barFill;
     [SerializeField] protected bool displayText;
+    [SerializeField] protected TextMeshProUGUI text;
 
     protected UnityEvent onEmpty;
     protected UnityEvent onFull;
@@ -88,8 +88,8 @@ public class PointBar : MonoBehaviour
 
     protected virtual void UpdateDisplay()
     {
-        float fillAmount = Mathf.Clamp01(currentPoints / maxPoints);
-        barFill.fillAmount = fillAmount;
+        // float fillAmount = Mathf.Clamp01(currentPoints / maxPoints);
+        // barFill.fillAmount = fillAmount;
     }
 
     private void CheckPoints()

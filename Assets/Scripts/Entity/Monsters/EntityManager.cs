@@ -200,24 +200,7 @@ public class EntityManager : MonoBehaviour
             newRoomPosition = newRoom.TilePositions[Random.Range(0, newRoom.TilePositions.Count)];
         }
         
-        float roomX = newRoomPosition.x;
-        float roomY = newRoomPosition.y;
-        Vector2 spawnPosition = new Vector2(roomX, roomY);
-        
-        // if (sideIndex % 2 == 0)
-        // {
-        //     spawnPosition = (Vector2)player.transform.position +
-        //                     sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
-        //                     Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
-        //                         screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
-        // }
-        // else
-        // {
-        //     spawnPosition = (Vector2)player.transform.position +
-        //                     sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
-        //                     Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
-        //                         screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
-        // }
+        Vector2 spawnPosition = (Vector2)newRoomPosition;
         
         return spawnPosition;
     }
@@ -255,22 +238,6 @@ public class EntityManager : MonoBehaviour
                 break;
             }
         }
-
-        
-        // if (sideIndex % 2 == 0)
-        // {
-        //     spawnPosition = (Vector2)player.transform.position +
-        //                     sideDirections[sideIndex] * (screenWidthWorldSpace / 2 + monsterSpawnBufferDistance) +
-        //                     Vector2.up * Random.Range(-screenHeightWorldSpace / 2 - monsterSpawnBufferDistance,
-        //                         screenHeightWorldSpace / 2 + monsterSpawnBufferDistance);
-        // }
-        // else
-        // {
-        //     spawnPosition = (Vector2)player.transform.position +
-        //                     sideDirections[sideIndex] * (screenHeightWorldSpace / 2 + monsterSpawnBufferDistance) +
-        //                     Vector2.right * Random.Range(-screenWidthWorldSpace / 2 - monsterSpawnBufferDistance,
-        //                         screenWidthWorldSpace / 2 + monsterSpawnBufferDistance);
-        // }
         
         
         Room newRoom = levelManager.DungeonGenerator.Rooms[Random.Range(0, levelManager.DungeonGenerator.Rooms.Count)];

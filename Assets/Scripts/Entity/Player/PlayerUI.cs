@@ -7,7 +7,7 @@ public class PlayerUI : MonoBehaviour
     public PauseMenu pauseMenu; 
     
     [Header("Point bars and text")]
-    public PointBar levelBar;
+    public ExperienceBar levelBar;
     public TextMeshProUGUI levelText;
     public HealthBar healthBar;
     public TextMeshProUGUI healthText;

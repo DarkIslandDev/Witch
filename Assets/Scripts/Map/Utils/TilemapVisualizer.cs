@@ -9,6 +9,7 @@ using UnityEngine.Tilemaps;
 public class TilemapVisualizer : MonoBehaviour
 {
     [SerializeField] protected Tilemap floorTilemap;
+    [SerializeField] protected Tilemap closedFloorTilemap;
     [SerializeField] protected Tilemap wallTilemap;
     [SerializeField] protected Tilemap doorTilemap;
     [SerializeField] protected Tilemap itemTilemap;
@@ -154,5 +155,13 @@ public class TilemapVisualizer : MonoBehaviour
         floorTilemap.ClearAllTiles();
         wallTilemap.ClearAllTiles();
         doorTilemap.ClearAllTiles();
+    }
+
+    public void ClearClosedTilesFromRoom(IEnumerable<Vector2Int> tilePositions)
+    {
+        foreach (Vector2Int tilePosition in tilePositions)
+        {
+            closedFloorTilemap.SetTile((Vector3Int)tilePosition, null);
+        }
     }
 }
