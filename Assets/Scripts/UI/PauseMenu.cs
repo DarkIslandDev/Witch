@@ -8,6 +8,7 @@ public class PauseMenu : MonoBehaviour
     
     [SerializeField] private GameObject pauseButton;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject settingsMenu;
 
     [SerializeField] private LocalizedText pauseText;
     [SerializeField] private LocalizedText settingsText;
@@ -88,6 +89,18 @@ public class PauseMenu : MonoBehaviour
                     throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    public void OpenSettings()
+    {
+        pauseMenu.SetActive(false);
+        settingsMenu.SetActive(true);
+    }
+
+    public void CloseSettings()
+    {
+        settingsMenu.SetActive(false);
+        pauseMenu.SetActive(true);
     }
 
     private void OnLanguageChange()
